@@ -3,20 +3,13 @@
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
-let posts = [];
-try {
-  const allPosts = await getCollection('blog');
-  if (allPosts) {
-    posts = allPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-  }
-} catch (error) {
-  console.error("Error fetching blog posts:", error);
-}
+const posts = await getCollection('blog');
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 function formatDate(date) {
     return date.toLocaleDateString('en-US', {
         day: 'numeric',
-        month: 'short',  // This will give us abbreviated month names
+        month: 'short',
         year: 'numeric'
     });
 }
@@ -102,7 +95,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
         </section>
 
         <section id="blog-posts">
-            <h3>My Posts</h3>
+            <h3>Posts</h3>
             {posts.length > 0 ? (
                 <ul class="post-list">
                     {posts.map(post => (
@@ -115,7 +108,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
                     ))}
                 </ul>
             ) : (
-                <p class="no-posts-message">There's nothing here but I will get back to writing soon... I promise.</p>
+                <p class="no-posts-message">I will get back to writing soon... I promise.</p>
             )}
         </section>
     </main>
