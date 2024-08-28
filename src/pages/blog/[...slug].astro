@@ -1,0 +1,36 @@
+---
+// src/pages/blog/[...slug].astro
+import { getCollection } from 'astro:content';
+import '../../styles/global.css';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map(post => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{post.data.title} - [Your Name]'s Blog</title>
+</head>
+<body>
+    <nav>
+        <a href="/">← Back to Home</a>
+    </nav>
+    <main>
+        <article>
+            <h1>{post.data.title}</h1>
+            <div class="date">{new Date(post.data.date).toLocaleDateString()}</div>
+            <Content />
+        </article>
+    </main>
+</body>
+</html>

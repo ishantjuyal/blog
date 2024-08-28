@@ -1,0 +1,45 @@
+---
+// src/pages/index.astro
+import { getCollection } from 'astro:content';
+import '../styles/global.css';
+
+const posts = await getCollection('blog');
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+function truncate(str, length) {
+  const words = str.split(' ');
+  if (words.length > length) {
+    return words.slice(0, length).join(' ') + '...';
+  }
+  return str;
+}
+---
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[Your Name]'s Personal Site</title>
+</head>
+<body>
+    <main>
+        <section id="intro">
+            <h1>[Your Name]</h1>
+            <p>Hello! I'm [Your Name], and this is my personal website. I'm passionate about [your interests/profession], and I use this space to share my thoughts and experiences.</p>
+            <p>Below you'll find my latest blog posts. Feel free to explore them or <a href="/about">learn more about me</a>.</p>
+        </section>
+
+        <section id="blog-posts">
+            <h2>Latest Blog Posts</h2>
+            {posts.map(post => (
+                <article>
+                    <h3>{post.data.title}</h3>
+                    <div class="date">{new Date(post.data.date).toLocaleDateString()}</div>
+                    <p>{truncate(post.body, 15)}</p>
+                    <a href={`/blog/${post.slug}`}>Read more</a>
+                </article>
+            ))}
+        </section>
+    </main>
+</body>
+</html>
