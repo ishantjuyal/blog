@@ -21,6 +21,8 @@ function formatDate(date) {
         year: 'numeric'
     });
 }
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
 <html lang="en">
@@ -28,6 +30,8 @@ function formatDate(date) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{post.data.title} - Ishant's Blog</title>
+    <meta name="description" content={post.data.description || `Read about ${post.data.title} on Ishant's blog.`}>
+    <link rel="canonical" href={canonicalURL}>
 </head>
 <body>
     <nav>
@@ -35,7 +39,7 @@ function formatDate(date) {
     </nav>
     <main>
         <article>
-            <h2>{post.data.title}</h2>
+            <h1>{post.data.title}</h1>
             <span class="post-date">{formatDate(post.data.date)}</span>
             <Content />
         </article>
