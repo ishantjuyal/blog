@@ -19,16 +19,6 @@ h1 {
     margin-bottom: 0.5em;
 }
 
-nav a {
-    color: #666;
-    text-decoration: none;
-    transition: color 0.3s ease;
-}
-
-nav a:hover {
-    color: #000;
-}
-
 article {
     margin-bottom: 40px;
 }
@@ -41,4 +31,54 @@ h2 {
     color: #666;
     font-size: 0.9em;
     margin-bottom: 1em;
+}
+
+:root {
+    --link-color: #990606; /* This is blue, change it to your preferred color */
+}
+
+a, a:visited, a:hover, a:active {
+    color: var(--link-color);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.post-list {
+    list-style-type: none;
+    padding: 0;
+}
+.post-item {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: baseline;
+}
+.post-date {
+    min-width: 100px; /* Increased from 100px to accommodate longer date format */
+    margin-right: 8px; /* This adds space between date and title */
+    color: #666;
+    flex-shrink: 0; /* Prevents the date from shrinking */
+}
+.post-title {
+    flex-grow: 1;
+}
+.post-title a {
+    text-decoration: none;
+    color: #333;
+}
+.post-title a:hover {
+    text-decoration: underline;
+}
+
+.back-link {
+    color: #666 !important; /* Override the general link color */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.back-link:hover {
+    color: #000 !important; /* Darker on hover */
+    text-decoration: none !important; /* No underline on hover */
 }

@@ -1,7 +1,7 @@
 ---
-# src/content/blog/third-post.md
 title: "Turning 25 sucks, am I gonna love it?"
 date: 2023-08-29
+description: "As I turn 25, a lot of things go on in my mind. With this piece, I want to get them out."
 ---
 
 I turned 25 yesterday.

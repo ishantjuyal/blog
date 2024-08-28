@@ -1,5 +1,6 @@
 ---
 // src/pages/index.astro
+import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
@@ -19,75 +20,11 @@ const siteDescription = "Hi! Welcome to Ishant's personal website where he share
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{siteTitle}</title>
-    <meta name="description" content={siteDescription}>
-    <link rel="canonical" href={canonicalURL}>
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GPHNTYTXYB"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-GPHNTYTXYB');
-    </script>
-
-    <style>
-        :root {
-            --link-color: #990606; /* This is blue, change it to your preferred color */
-        }
-
-        a, a:visited, a:hover, a:active {
-            color: var(--link-color);
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .post-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .post-item {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: baseline;
-        }
-        .post-date {
-            min-width: 100px; /* Increased from 100px to accommodate longer date format */
-            margin-right: 8px; /* This adds space between date and title */
-            color: #666;
-            flex-shrink: 0; /* Prevents the date from shrinking */
-        }
-        .post-title {
-            flex-grow: 1;
-        }
-        .post-title a {
-            text-decoration: none;
-            color: #333;
-        }
-        .post-title a:hover {
-            text-decoration: underline;
-        }
-    </style>
-</head>
-<body>
+<Layout title={siteTitle} description={siteDescription} canonicalURL={canonicalURL}>
     <main>
         <section id="intro">
             <h1>Hey 👋</h1>
-            <p>I'm Ishant, and this is my personal website. I'm the founder of <a href="https://www.crework.club" target="_blank">Crework</a> and <a href="https://www.creworklabs.com" target="_blank">Crework Labs</a>.</p>
+            <p>I'm Ishant, and this is my personal website. I'm the co-founder of <a href="https://www.crework.club" target="_blank">Crework</a> and <a href="https://www.creworklabs.com" target="_blank">Crework Labs</a>.</p>
             <p>I am passionate about education, solving problems and building products.</p>
 
             <p>These are some of the products i have built -
@@ -126,5 +63,4 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
             )}
         </section>
     </main>
-</body>
-</html>
+</Layout>

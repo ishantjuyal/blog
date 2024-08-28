@@ -1,5 +1,6 @@
 ---
 // src/pages/blog/[...slug].astro
+import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import '../../styles/global.css';
 
@@ -22,27 +23,19 @@ function formatDate(date) {
     });
 }
 
-const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+const postTitle = `${post.data.title}`;
+const postDescription = post.data.description || `${post.data.title} by Ishant.`;
+const canonicalURL = new URL(`blog/${post.slug}`, Astro.site).toString();
 ---
 
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{post.data.title} - Ishant's Blog</title>
-    <meta name="description" content={post.data.description || `Read about ${post.data.title} on Ishant's blog.`}>
-    <link rel="canonical" href={canonicalURL}>
-</head>
-<body>
+<Layout title={postTitle} description={postDescription} canonicalURL={canonicalURL}>
     <nav>
-        <a href="/">← Back to Home</a>
+        <a href="/" class="back-link">← Back to Home</a>
     </nav>
     <main>
         <article>
             <h1>{post.data.title}</h1>
-            <span class="post-date">{formatDate(post.data.date)}</span>
             <Content />
         </article>
     </main>
-</body>
-</html>
+</Layout>
