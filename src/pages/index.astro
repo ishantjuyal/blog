@@ -90,14 +90,20 @@ function formatDate(date) {
 
         <section id="blog-posts">
             <h3>My Posts</h3>
-            {posts.map(post => (
-                <li class="post-item">
-                        <span class="post-date">{formatDate(post.data.date)}</span>
-                        <span class="post-title">
-                            <a href={`/blog/${post.slug}`}>{post.data.title}</a>
-                        </span>
-                </li>
-            ))}
+            {posts.length > 0 ? (
+                <ul class="post-list">
+                    {posts.map(post => (
+                        <li class="post-item">
+                            <span class="post-date">{formatDate(post.data.date)}</span>
+                            <span class="post-title">
+                                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            ) : (
+                <p class="no-posts-message">There's nothing here but I will get back to writing soon... I promise.</p>
+            )}
         </section>
     </main>
 </body>
