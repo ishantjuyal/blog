@@ -26,6 +26,22 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     <title>{siteTitle}</title>
     <meta name="description" content={siteDescription}>
     <link rel="canonical" href={canonicalURL}>
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GPHNTYTXYB"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-GPHNTYTXYB');
+    </script>
+
     <style>
         :root {
             --link-color: #990606; /* This is blue, change it to your preferred color */
@@ -76,11 +92,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 
             <p>These are some of the products i have built -
             <br>
-            <!-- <a href="https://chromewebstore.google.com/detail/focus-hours/ogldhbljdkjlcmlfhlebfbfnonlahflh" target="_blank">focus hours</a>
-            <br> -->
             <a href="https://www.pawpal.life/" target="_blank">Pawpal</a>, 
             <a href="https://www.prepair.in/" target="_blank">Prepair</a>, 
-            <a href="https://chromewebstore.google.com/detail/year-tracker/acdnmoeegibdamcidkjohklcnnhghfdf">Year Progress Tracker</a>
+            <a href="https://chromewebstore.google.com/detail/year-progress-goals-track/acdnmoeegibdamcidkjohklcnnhghfdf?authuser=0&hl=en-GB" target="_blank">Year Progress Tracker</a>
             </p>
 
             <p>
