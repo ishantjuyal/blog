@@ -6,12 +6,12 @@ import '../styles/global.css';
 const posts = await getCollection('blog');
 posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-function truncate(str, length) {
-  const words = str.split(' ');
-  if (words.length > length) {
-    return words.slice(0, length).join(' ') + '...';
-  }
-  return str;
+function formatDate(date) {
+    return date.toLocaleDateString('en-US', {
+        day: 'numeric',
+        month: 'short',  // This will give us abbreviated month names
+        year: 'numeric'
+    });
 }
 ---
 
@@ -19,25 +19,84 @@ function truncate(str, length) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[Your Name]'s Personal Site</title>
+    <title>Ishant Juyal</title>
+    <style>
+        :root {
+            --link-color: #990606; /* This is blue, change it to your preferred color */
+        }
+
+        a, a:visited, a:hover, a:active {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .post-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .post-item {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: baseline;
+        }
+        .post-date {
+            min-width: 100px; /* Increased from 100px to accommodate longer date format */
+            margin-right: 8px; /* This adds space between date and title */
+            color: #666;
+            flex-shrink: 0; /* Prevents the date from shrinking */
+        }
+        .post-title {
+            flex-grow: 1;
+        }
+        .post-title a {
+            text-decoration: none;
+            color: #333;
+        }
+        .post-title a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
     <main>
         <section id="intro">
-            <h1>[Your Name]</h1>
-            <p>Hello! I'm [Your Name], and this is my personal website. I'm passionate about [your interests/profession], and I use this space to share my thoughts and experiences.</p>
-            <p>Below you'll find my latest blog posts. Feel free to explore them!</p>
+            <h2>Hey 👋</h2>
+            <p>I'm Ishant, and this is my personal website. I'm the founder of <a href="https://www.crework.club" target="_blank">Crework</a> and <a href="https://www.creworklabs.com" target="_blank">Crework Labs</a>.</p>
+            <p>I am passionate about education, solving problems and building products.</p>
+
+            <p>These are some of the products i have built -
+            <br>
+            <!-- <a href="https://chromewebstore.google.com/detail/focus-hours/ogldhbljdkjlcmlfhlebfbfnonlahflh" target="_blank">focus hours</a>
+            <br> -->
+            <a href="https://www.pawpal.life/" target="_blank">Pawpal</a>, 
+            <a href="https://www.prepair.in/" target="_blank">Prepair</a>, 
+            <a href="https://chromewebstore.google.com/detail/year-tracker/acdnmoeegibdamcidkjohklcnnhghfdf">Year Progress Tracker</a>
+            </p>
+
+            <p>
+            if you want to connect, these are my socials:
+            <br>
+            <a href="https://twitter.com/juyal_ishant" target="_blank">X</a>, 
+            <a href="https://peerlist.io/ishantjuyal" target="_blank">Peerlist</a>, 
+            <a href="https://www.linkedin.com/in/ishantjuyal/" target="_blank">LinkedIn</a>
+            </p>
+            
+            <p>Below, you'll find my latest blog posts. Feel free to explore them!</p>
         </section>
 
         <section id="blog-posts">
-            <h2>Latest Blog Posts</h2>
+            <h3>My Posts</h3>
             {posts.map(post => (
-                <article>
-                    <h3>{post.data.title}</h3>
-                    <div class="date">{new Date(post.data.date).toLocaleDateString()}</div>
-                    <p>{truncate(post.body, 15)}</p>
-                    <a href={`/blog/${post.slug}`}>Read more</a>
-                </article>
+                <li class="post-item">
+                        <span class="post-date">{formatDate(post.data.date)}</span>
+                        <span class="post-title">
+                            <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+                        </span>
+                </li>
             ))}
         </section>
     </main>

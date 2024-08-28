@@ -4,11 +4,9 @@ title: "My Third Blog Post"
 date: "2024-08-29"
 ---
 
-## My Third Blog Post
-
 This is the content of my third blog post. I can write as much as I want here.
 
-## A Subheading
+### A Subheading
 
 I can use Markdown formatting to create:
 
