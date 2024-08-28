@@ -3,8 +3,13 @@
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
-const posts = await getCollection('blog');
-posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+let posts = [];
+try {
+  posts = await getCollection('blog');
+  posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+} catch (error) {
+  console.error("Error fetching blog posts:", error);
+}
 
 function formatDate(date) {
     return date.toLocaleDateString('en-US', {
