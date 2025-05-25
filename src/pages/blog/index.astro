@@ -1,0 +1,38 @@
+---
+// src/pages/blog/index.astro
+import Layout from '../../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import '../../styles/global.css';
+
+const posts = await getCollection('blog');
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+function formatDate(date) {
+  return date.toLocaleDateString('en-US', { day:'numeric', month:'short', year:'numeric' });
+}
+
+const pageTitle = 'All Posts – Ishant Juyal';
+const pageDesc  = 'Archive of everything I’ve written.';
+const canonical = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<Layout title={pageTitle} description={pageDesc} canonicalURL={canonical}>
+  <main>
+    <h1>Posts</h1>
+
+    {posts.length ? (
+      <ul class="post-list">
+        {posts.map(p => (
+          <li class="post-item">
+            <span class="post-date">{formatDate(p.data.date)}</span>
+            <span class="post-title">
+              <a href={`/blog/${p.slug}`}>{p.data.title}</a>
+            </span>
+          </li>
+        ))}
+      </ul>
+    ) : (
+      <p class="no-posts-message">Nothing here yet. Stay tuned!</p>
+    )}
+  </main>
+</Layout>

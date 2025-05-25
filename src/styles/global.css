@@ -1,84 +1,135 @@
-/* src/styles/global.css */
-body {
-    background-color: #FFFAF1;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+/* ───────────────────────────────────────────
+   src/styles/global.css
+   ─────────────────────────────────────────── */
+
+/* Shared design-tokens */
+:root {
+    --content-w: 680px;          /* one canonical width for body + header */
+    --link-color: #8b2b2b;       /* accent link colour (adjust if you want red) */
+    --bg: #FFFAF1;               /* paper-cream background */
+  }
+  
+  /* Base layout & typography */
+  body {
+    background-color: var(--bg);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+                 Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
     line-height: 1.6;
     color: #333;
-    max-width: 650px;
+    max-width: var(--content-w);
     margin: 0 auto;
     padding: 20px;
-}
-
-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-h1 {
-    font-size: 2.5em;
-    margin-bottom: 0.5em;
-}
-
-article {
-    margin-bottom: 40px;
-}
-
-h2 {
-    margin-bottom: 0.3em;
-}
-
-.date {
+  }
+  
+  h1 {
+    font-size: 2.2em;            /* slightly smaller than before */
+    margin-bottom: 0.6em;
+  }
+  
+  h2 { margin-bottom: 0.3em; }
+  
+  article { margin-bottom: 40px; }
+  
+  .date {
     color: #666;
     font-size: 0.9em;
     margin-bottom: 1em;
-}
-
-:root {
-    --link-color: #990606; /* This is blue, change it to your preferred color */
-}
-
-a, a:visited, a:hover, a:active {
+  }
+  
+  /* Links */
+  a,
+  a:visited,
+  a:hover,
+  a:active {
     color: var(--link-color);
     text-decoration: none;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-.post-list {
-    list-style-type: none;
-    padding: 0;
-}
-.post-item {
+  }
+  
+  a:hover { text-decoration: underline; }
+  
+  /* ── Header & Nav ─────────────────────────── */
+  .site-header {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 1.25rem 0;
+  }
+  
+  .container {
+    max-width: var(--content-w);
+    margin: 0 auto;
+    padding: 0 0;            /* small side gutter for phones */
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;      /* aligns “Posts” baseline with site title */
+  }
+  
+  .site-title,
+  .site-title:visited,
+  .site-title:hover,
+  .site-title:active {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+    text-decoration: none;
+  }
+  
+  .site-nav {
+    display: flex;
+    gap: 1.5rem;
+  }
+  
+  .site-nav a,
+  .site-nav a:visited,
+  .site-nav a:hover,
+  .site-nav a:active {
+    color: #555;                /* slightly softer than pure black */
+    font-weight: 500;
+    text-decoration: none;
+  }
+  
+  .site-nav a:hover { text-decoration: underline; }
+  
+  /* ── Post list ────────────────────────────── */
+  .post-list { list-style: none; padding: 0; }
+  
+  .post-item {
     margin-bottom: 15px;
     display: flex;
     align-items: baseline;
-}
-.post-date {
-    min-width: 100px; /* Increased from 100px to accommodate longer date format */
-    margin-right: 8px; /* This adds space between date and title */
+  }
+  
+  .post-date {
+    min-width: 100px;
+    margin-right: 8px;
     color: #666;
-    flex-shrink: 0; /* Prevents the date from shrinking */
-}
-.post-title {
-    flex-grow: 1;
-}
-.post-title a {
-    text-decoration: none;
-    color: #333;
-}
-.post-title a:hover {
-    text-decoration: underline;
-}
-
-.back-link {
-    color: #666 !important; /* Override the general link color */
+    flex-shrink: 0;
+  }
+  
+  .post-title { flex-grow: 1; }
+  
+  .post-title a { color: #333; }
+  
+  .post-title a:hover { text-decoration: underline; }
+  
+  /* Back-link on individual post pages */
+  .back-link,
+  .back-link:visited,
+  .back-link:hover,
+  .back-link:active {
+    color: #666;
     text-decoration: none;
     transition: color 0.3s ease;
-}
-
-.back-link:hover {
-    color: #000 !important; /* Darker on hover */
-    text-decoration: none !important; /* No underline on hover */
-}
+  }
+  
+  .back-link:hover { color: #333; }
+  
+  /* ── Mobile tweaks ────────────────────────── */
+  @media (max-width: 640px) {
+    body { padding: 16px; }
+  
+    .post-item {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .post-date { margin-bottom: 4px; }
+  }  

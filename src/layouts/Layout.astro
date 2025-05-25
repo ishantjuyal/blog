@@ -35,6 +35,17 @@ const googleAnalyticsId = 'G-GPHNTYTXYB'; // Replace with your actual GA4 tracki
     <!-- You can add other common head elements here -->
 </head>
 <body>
-    <slot />
+<!-- HEADER / NAV  -->
+    <header class="site-header">
+      <div class="container">
+        <a href="/" class="site-title">Ishant Juyal</a>
+        <nav class="site-nav">
+          <a href="/blog">Posts</a>
+        </nav>
+      </div>
+    </header>
+
+    <!-- PAGE CONTENT -->
+    <main><slot /></main>
 </body>
 </html>
