@@ -2,6 +2,7 @@
 title: "How to “un-fry” my brain"
 date: 2024-12-29
 description: "Short content has fucked up our brains. I will be challenging that."
+featured: true
 ---
 I think my brain’s circuits are fried because of short form content and other parts of my lifestyle which I am not proud of. So, I am on a mission to “un-fry” my brain to become the normal version of Ishant. The current version of Ishant is not at all normal.
 

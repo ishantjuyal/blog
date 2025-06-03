@@ -1,10 +1,10 @@
 ---
-// src/pages/blog/index.astro
+// src/pages/posts/index.astro
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import '../../styles/global.css';
 
-const posts = await getCollection('blog');
+const posts = await getCollection('posts');
 posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 function formatDate(date) {
@@ -12,7 +12,7 @@ function formatDate(date) {
 }
 
 const pageTitle = 'All Posts – Ishant Juyal';
-const pageDesc  = 'Archive of everything I’ve written.';
+const pageDesc  = "Archive of everything I've written.";
 const canonical = new URL(Astro.url.pathname, Astro.site).toString();
 ---
 
@@ -26,7 +26,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).toString();
           <li class="post-item">
             <span class="post-date">{formatDate(p.data.date)}</span>
             <span class="post-title">
-              <a href={`/blog/${p.slug}`}>{p.data.title}</a>
+              <a href={`/posts/${p.slug}`}>{p.data.title}</a>
             </span>
           </li>
         ))}

@@ -1,11 +1,11 @@
 ---
-// src/pages/blog/[...slug].astro
+// src/pages/posts/[...slug].astro
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import '../../styles/global.css';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = await getCollection('posts');
   return posts.map(post => ({
     params: { slug: post.slug },
     props: { post },
@@ -25,12 +25,12 @@ function formatDate(date) {
 
 const postTitle = `${post.data.title}`;
 const postDescription = post.data.description || `${post.data.title} by Ishant.`;
-const canonicalURL = new URL(`blog/${post.slug}`, Astro.site).toString();
+const canonicalURL = new URL(`posts/${post.slug}`, Astro.site).toString();
 ---
 
 <Layout title={postTitle} description={postDescription} canonicalURL={canonicalURL}>
     <nav>
-        <a href="/" class="back-link">← Back to Home</a>
+        <a href="/posts" class="back-link">← Back to Home</a>
     </nav>
     <main>
         <article>

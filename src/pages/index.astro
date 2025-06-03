@@ -4,8 +4,16 @@ import Layout from '../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 import '../styles/global.css';
 
-const posts = await getCollection('blog');
-posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const allPosts = await getCollection('posts');
+const featuredPosts = allPosts.filter(post => post.data.featured);
+featuredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const projects = [
+    { name: 'Appvia', url: 'https://www.appvia.live/', description: 'Your Play Store reviews, auto-delivered to your Slack' },
+    { name: 'PM Quest', url: 'https://pmquest.ishantjuyal.com/', description: 'Daily challenges to level up your product thinking' },
+    { name: 'Idea Validator', url: 'https://idea-validator.ishantjuyal.com/', description: 'A tool to analyze your startup idea across 4 key dimensions' },
+    { name: 'Year Progress Tracker', url: 'https://chromewebstore.google.com/detail/acdnmoeegibdamcidkjohklcnnhghfdf?utm_source=item-share-cb', description: 'A chrome extension to help you track your yearly progress and goals' },
+];
 
 function formatDate(date) {
     return date.toLocaleDateString('en-US', {
@@ -30,29 +38,46 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
             if you want to connect or know more about me, these are my socials:
             <br>
             <a href="https://peerlist.io/ishantjuyal" target="_blank">Peerlist</a>, 
-            <a href="https://www.linkedin.com/in/ishantjuyal/" target="_blank">LinkedIn</a>
+            <a href="https://www.linkedin.com/in/ishantjuyal/" target="_blank">LinkedIn</a>,
+            <a href="https://x.com/juyal_ishant" target="_blank">X</a>
             </p>
             
             <p>Below, you'll find some of my blog posts. Feel free to explore them!</p>
-            <p>I also write my thoughts in a newsletter (different from the blog posts). If you’d like to be notified of my new posts there, subscribe on Substack: <a href="https://ishant.substack.com/" target="_blank">Ishant's Newsletter</a></p>
+            <p>I also write my thoughts in a newsletter. These are different from the posts below: <a href="https://ishant.substack.com/" target="_blank">Ishant's Newsletter</a></p>
+        </section>
+
+        <section id="projects">
+            <h3>My Products/ Projects</h3>
+            {projects.length > 0 ? (
+                <div class="project-list">
+                    {projects.map(project => (
+                        <p>
+                            <a href={project.url} target="_blank" rel="noopener noreferrer">{project.name}</a> - {project.description}
+                        </p>
+                    ))}
+                </div>
+            ) : (
+                <p>No projects listed yet.</p>
+            )}
         </section>
 
         <section id="blog-posts">
-            <h3>Posts</h3>
-            {posts.length > 0 ? (
+            <h3>My Favourite Posts</h3>
+            {featuredPosts.length > 0 ? (
                 <ul class="post-list">
-                    {posts.map(post => (
+                    {featuredPosts.map(post => (
                         <li class="post-item">
                             <span class="post-date">{formatDate(post.data.date)}</span>
                             <span class="post-title">
-                                <a href={`/blog/${post.slug}`}>{post.data.title}</a>
+                                <a href={`/posts/${post.slug}`}>{post.data.title}</a>
                             </span>
                         </li>
                     ))}
                 </ul>
             ) : (
-                <p class="no-posts-message">I will get back to writing soon... I promise.</p>
+                <p class="no-posts-message">No featured posts yet. Check back soon!</p>
             )}
+            <p class="view-all-posts"><a href="/posts">View all posts →</a></p>
         </section>
     </main>
 </Layout>
