@@ -2,6 +2,7 @@
 title: "Books"
 date: 2025-05-06
 description: "A list of books I have read"
+featured: true
 ---
 A running list of books I’ve finished over the past few years. The most recent ones are listed first.
 
