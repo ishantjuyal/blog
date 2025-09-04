@@ -7,6 +7,8 @@ featured: true
 A running list of books I’ve finished over the past few years. The most recent ones are listed first.
 
 **2025**
+- Anxious People
+- The Hidden Hindu 1
 - Days at the Morisaki Bookshop
 - The Vegetarian
 - Acts of God
