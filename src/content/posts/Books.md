@@ -28,3 +28,12 @@ A running list of books I’ve finished over the past few years. The most recent
 - The Krishna Key
 - Essentialism: The Disciplined Pursuit of Less
 - A Little Life
+
+**Others (I don't remember the year)**
+- The Shiva Trilogy (3 Books)
+- The Girl on The Train (My first book)
+- The Da Vinci Code
+- Atomic Habits
+- The Kite Runner
+- A Thousand Splendid Sons
+- The Courage to Be Disliked
