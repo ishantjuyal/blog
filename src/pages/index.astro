@@ -9,9 +9,10 @@ const featuredPosts = allPosts.filter(post => post.data.featured);
 featuredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const projects = [
-    { name: 'Appvia', url: 'https://www.appvia.live/', description: 'Your Play Store reviews, auto-delivered to your Slack' },
+    { name: 'TailorUp', url: 'https://tailorup.vercel.app/', description: 'Tailor your resume for any job in 2 minutes' },
+    { name: 'Appvia', url: 'https://www.appvia.live/', description: 'Play Store reviews of your app, auto-delivered to your Slack' },
     { name: 'PM Quest', url: 'https://pmquest.ishantjuyal.com/', description: 'Daily challenges to level up your product thinking' },
-    { name: 'Idea Validator', url: 'https://idea-validator.ishantjuyal.com/', description: 'A tool to analyze your startup idea across 4 key dimensions' },
+    { name: 'Reflectly', url: 'https://reflectly-delta.vercel.app/', description: 'Collect feedback that actually moves things' },
     { name: 'Year Progress Tracker', url: 'https://chromewebstore.google.com/detail/acdnmoeegibdamcidkjohklcnnhghfdf?utm_source=item-share-cb', description: 'A chrome extension to help you track your yearly progress and goals' },
     { name: 'Focus Hours', url: 'https://chromewebstore.google.com/detail/focus-hours/ogldhbljdkjlcmlfhlebfbfnonlahflh?authuser=0&hl=en-GB', description: 'Maintain better focus and minimise distractions by blocking specific websites.' },
 ];
@@ -33,18 +34,18 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     <main>
         <section id="intro">
             <h1>Hey 👋</h1>
-            <p>I'm Ishant, and this is my personal website.</p>
+            <p>I'm Ishant. I am a Product Manager and ex-founder who loves to build products, solve problems and eat a lot.</p>
+
+            <p>Currently I am working at Pickup Coffee as a Product Manager where I work on improving user retention and engagement. </p>
 
             <p>
-            if you want to connect or know more about me, these are my socials:
-            <br>
+            My socials:
             <a href="https://peerlist.io/ishantjuyal" target="_blank">Peerlist</a>, 
             <a href="https://www.linkedin.com/in/ishantjuyal/" target="_blank">LinkedIn</a>,
             <a href="https://x.com/juyal_ishant" target="_blank">X</a>
             </p>
             
-            <p>Below, you'll find some of my blog posts. Feel free to explore them!</p>
-            <p>I also write my thoughts in a newsletter. These are different from the posts below: <a href="https://ishant.substack.com/" target="_blank">Ishant's Newsletter</a></p>
+            <p>Subscribe to my newsletter here: <a href="https://ishant.substack.com/" target="_blank">Ishant's Newsletter</a></p>
         </section>
 
         <section id="projects">
