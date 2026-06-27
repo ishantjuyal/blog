@@ -9,9 +9,9 @@ const featuredPosts = allPosts.filter(post => post.data.featured);
 featuredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const projects = [
+    { name: 'PM Quest', url: 'https://pmquest.ishantjuyal.com/', description: 'Daily challenges to level up your product thinking' },
     { name: 'TailorUp', url: 'https://tailorup.vercel.app/', description: 'Tailor your resume for any job in 2 minutes' },
     { name: 'Appvia', url: 'https://www.appvia.live/', description: 'Play Store reviews of your app, auto-delivered to your Slack' },
-    { name: 'PM Quest', url: 'https://pmquest.ishantjuyal.com/', description: 'Daily challenges to level up your product thinking' },
     { name: 'Loopwise', url: 'https://www.loopwise.live/', description: 'Collect feedback that actually moves things' },
     { name: 'Secret Santa Organizer', url: 'https://www.secretsanta.world/', description: 'Effortless online Secret Santa Gift Echange Organizer' },
     { name: 'Year Progress Tracker', url: 'https://chromewebstore.google.com/detail/acdnmoeegibdamcidkjohklcnnhghfdf?utm_source=item-share-cb', description: 'A chrome extension to help you track your yearly progress and goals' },
@@ -35,9 +35,9 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     <main>
         <section id="intro">
             <h1>Hey 👋</h1>
-            <p>I'm Ishant. I am a Product Manager and ex-founder who loves to build products, solve problems and eat a lot.</p>
+            <p>I'm Ishant, a Product Manager and an ex-founder who loves to build products, solve problems and eat a lot.</p>
 
-            <p>Currently I am working at Pickup Coffee as a Product Manager where I work on improving user retention and engagement. </p>
+            <p>Currently I am working at Pickup Coffee (Philippines and Mexico) where I majorly work on improving user experience, engagement and retention. </p>
 
             <p>
             My socials:
@@ -48,6 +48,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
             
             <p>Subscribe to my newsletter here: <a href="https://ishant.substack.com/" target="_blank">Ishant's Newsletter</a></p>
         </section>
+
+        <p>I build side projects and products for fun whenever I am free.</p>
 
         <section id="projects">
             <h3>My Products/ Projects</h3>
@@ -63,6 +65,8 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
                 <p>No projects listed yet.</p>
             )}
         </section>
+
+        <p>Sometimes, I write too.</p>
 
         <section id="blog-posts">
             <h3>My Favourite Posts</h3>
