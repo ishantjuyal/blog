@@ -3,8 +3,11 @@
   "type": "module",
   "version": "0.0.1",
   "scripts": {
-    "dev": "astro dev",
-    "start": "astro dev",
+    "dev": "node scripts/dev-with-resume-watch.mjs",
+    "start": "node scripts/dev-with-resume-watch.mjs",
+    "generate:resume": "node scripts/generate-resume-pdf.mjs",
+    "generate:cv": "npm run generate:resume",
+    "prebuild": "npm run generate:resume",
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro"

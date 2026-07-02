@@ -1,5 +1,7 @@
 ---
 // src/layouts/Layout.astro
+import MixpanelTracker from "../components/MixpanelTracker.astro";
+
 export interface Props {
   title: string;
   description: string;
@@ -31,6 +33,7 @@ const googleAnalyticsId = 'G-GPHNTYTXYB'; // Replace with your actual GA4 tracki
         gtag('js', new Date());
         gtag('config', googleAnalyticsId);
     </script>
+    <MixpanelTracker />
     
     <!-- You can add other common head elements here -->
 </head>
@@ -40,8 +43,9 @@ const googleAnalyticsId = 'G-GPHNTYTXYB'; // Replace with your actual GA4 tracki
       <div class="container">
         <a href="/" class="site-title">Ishant Juyal</a>
         <nav class="site-nav">
-          <a href="/career">Career</a>
-          <a href="/posts">Posts</a>
+          <a href="/work">Work</a>
+          <a href="/writing">Writing</a>
+          <a href="/resume">Resume</a>
         </nav>
       </div>
     </header>

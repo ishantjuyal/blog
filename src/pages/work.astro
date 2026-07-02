@@ -1,0 +1,984 @@
+---
+import MixpanelTracker from "../components/MixpanelTracker.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+const ratingsRecoveryImg = "/portfolio-assets/ratings-recovery-case.jpg";
+const mexicoImg = "/portfolio-assets/mexico-expansion.jpg";
+const smsCostImg = "/portfolio-assets/sms-cost-optimization-case.jpg";
+const analyticsImg = "/portfolio-assets/analytics-taxonomy.jpg";
+
+const cases = [
+  {
+    n: "01",
+    tag: "Growth",
+    title: "Recovering app-store trust after payment bugs hurt ratings",
+    italic: "Turning retained, satisfied customers into visible public proof.",
+    context:
+      "Payment issues had pulled app ratings down, which weakened trust for new users discovering Pickup Coffee through the Play Store and App Store. Retention and in-app order feedback told a different story: regular customers were coming back, and 90% of order feedback was positive, but that satisfaction was not reaching public ratings.",
+    decision:
+      "Created a post-order rating nudge at the moment of highest confidence: after a completed purchase. The loop moved happy customers from in-app feedback to the store rating flow without interrupting checkout or asking cold users to review the app.",
+    constraints: [
+      "No reliable way to predict who would leave a negative public review",
+      "High-retention users liked the product but were not rating it",
+      "The prompt had to avoid adding friction to the order journey",
+      "Payment bugs had made user trust fragile",
+    ],
+    metrics: [
+      "App rating improved from 4.59 to 4.74",
+      "5-star review mix recovered",
+      "1-star review share came down",
+      "~3,000 monthly store-rating intent taps",
+    ],
+    image: ratingsRecoveryImg,
+  },
+  {
+    n: "02",
+    tag: "Expansion",
+    title: "Leading the Mexico MVP launch for Pickup Coffee's consumer app",
+    italic: "Country expansion through a focused MVP, localization, and launch operations.",
+    context:
+      "Pickup Coffee already had stores and booths in Mexico, but the consumer app only worked in the Philippines. Mexico wanted the app to unlock user growth, voucher distribution, and customer behaviour visibility without inheriting every Philippines feature on day one.",
+    decision:
+      "Scoped a lean Mexico MVP on top of the existing Philippines app structure. We removed non-essential flows like delivery, localized the experience, added multilingual support, and restricted access by market through phone-number and location rules.",
+    constraints: [
+      "Mexico needed speed without a separate app rebuild",
+      "Philippines and Mexico users had to be routed to the right market experience",
+      "Localization, legal, marketing, and operations requirements kept changing",
+      "Baristas and local teams needed training on back office, vouchers, and analytics tools",
+    ],
+    metrics: [
+      "Mexico app launch completed",
+      "Initial user traction",
+      "Store and barista readiness",
+    ],
+    image: mexicoImg,
+  },
+  {
+    n: "03",
+    tag: "Cost Systems",
+    title: "Reducing SMS costs by moving order updates to push notifications",
+    italic: "A cost spike investigation turned into a recurring savings system.",
+    context:
+      "SMS costs started rising without a clear owner or root cause. Marketing campaigns sent through CleverTap were part of the spike, but a deeper analysis showed that recurring order-status messages from the backend were the larger structural cost driver.",
+    decision:
+      "Split the problem into campaign SMS and transactional SMS. Marketing campaigns were capped after low conversion was identified, while order updates moved from repeated SMS messages to push notifications, with one SMS reserved to tell users they could track the order in-app.",
+    constraints: [
+      "Order communication still had to feel reliable to customers",
+      "Marketing needed limits without losing campaign reach",
+      "Backend-triggered status updates touched multiple order states",
+      "Push notifications depended on clean user and order data from CleverTap integration",
+    ],
+    metrics: [
+      "~$3K/month SMS cost reduction",
+      "~$36K/year savings",
+      "Marketing SMS caps introduced",
+      "Order updates shifted to push notifications",
+    ],
+    image: smsCostImg,
+  },
+  {
+    n: "04",
+    tag: "Analytics",
+    title: "Building product analytics instrumentation for funnel & behaviour visibility",
+    italic: "Measurement maturity, not vanity dashboards.",
+    context:
+      "Tracking was inconsistent. Naming was duplicated. Funnels could not be trusted. PM, marketing, and engineering each held a different version of the truth.",
+    decision:
+      "Designed a single event taxonomy across homepage, location, onboarding, reorder, cart, rating, and loyalty surfaces. Defined parameter conventions and a single ownership matrix so analytics stopped drifting between PRDs.",
+    constraints: [
+      "Existing CleverTap events could not be retroactively renamed",
+      "Marketing needed campaign-level attribution preserved",
+      "Mobile release cadence limited backfill speed",
+    ],
+    metrics: [
+      "Event coverage %",
+      "Funnel reliability",
+      "Decision turnaround time",
+      "Duplicate event reduction",
+    ],
+    image: analyticsImg,
+  },
+];
+
+const labPreviews = [
+  {
+    label: "Appvia / Voice-of-Customer Ops",
+    title: "A Slack bot that made Play Store reviews impossible to miss.",
+    body:
+      "Built first for Pickup Coffee after I saw that app-store feedback was not being tracked in one place. Appvia fetches Google Play reviews daily and sends them into Slack, helping teams spot review spikes, bugs, and user complaints faster. It is now used by 5-6 teams across multiple apps.",
+    tags: ["Play Store reviews", "Slack bot", "Daily digest", "Weekly reports"],
+    system: "APV_DAILY_REVIEWS",
+    status: "LIVE",
+    lines: [
+      "> fetch play store reviews",
+      "> group signals by rating",
+      "> post digest to slack",
+      "> surface bug spikes early",
+      "[impact] feedback became visible",
+    ],
+    variant: "lab-panel-alt",
+  },
+  {
+    label: "PM Quest / Growth Lab",
+    title: "A daily practice loop, built from zero.",
+    body:
+      "Not a side project. A growth lab to test activation, retention, content loops, and AI feedback for PM interview practice. Question -> answer -> feedback -> peer comparison -> streak. The point is to operate, not to demo.",
+    tags: ["North Star: WAU", "Streaks", "AI Feedback", "Peer answers"],
+    system: "LOOP_V3",
+    status: "LIVE",
+    lines: [
+      "> prompt",
+      "> user answer",
+      "> ai feedback",
+      "> peer compare",
+      "> streak +1",
+      "[hypothesis] streaks > gamification",
+    ],
+  },
+];
+
+const title = "Work — Ishant Juyal";
+const description =
+  "Ishant Juyal builds consumer, growth, and ops-heavy product systems. Ratings recovery, market expansion, cost optimization, and analytics instrumentation for messy consumer businesses.";
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Ishant Juyal" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:title" content="Ishant Juyal — Founder-Operator PM" />
+    <meta
+      property="og:description"
+      content="Turning messy consumer, growth, and ops problems into shipped systems and measurable outcomes."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content={ratingsRecoveryImg} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Ishant Juyal — Founder-Operator PM" />
+    <meta
+      name="twitter:description"
+      content="Turning messy consumer, growth, and ops problems into shipped systems and measurable outcomes."
+    />
+    <meta name="twitter:image" content={ratingsRecoveryImg} />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap"
+    />
+    <MixpanelTracker />
+  </head>
+  <body>
+    <div class="portfolio-page">
+      <nav class="portfolio-nav reveal">
+        <a class="portfolio-kicker" href="/">Ishant Juyal</a>
+        <div class="nav-links">
+          <a href="/work" aria-current="page">Work</a>
+          <a href="/lab">Lab</a>
+          <a href="/writing">Writing</a>
+          <a href="/resume">Resume</a>
+        </div>
+      </nav>
+
+      <header class="hero">
+        <h1 class="hero-title reveal delay-80">
+          Product Manager building <span>consumer, growth, &amp; ops</span>{" "}
+          product systems.
+        </h1>
+        <div class="hero-status reveal delay-160">
+          <a class="status-pill" href="/resume">Open to PM roles</a>
+          <span>Consumer apps · Growth systems · Ops tooling · Analytics</span>
+        </div>
+      </header>
+
+      <section id="work" class="case-section">
+        <div class="section-rule case-heading">
+          <span>Section 01 — Case Studies</span>
+          <span>04 selected</span>
+        </div>
+
+        {
+          cases.map((item, index) => (
+            <article class="case-article reveal">
+              <div class={`case-copy ${index % 2 === 1 ? "case-copy-alt" : ""}`}>
+                <span class="case-label">
+                  CASE_{item.n} / {item.tag.toUpperCase()}
+                </span>
+                <h2>{item.title}</h2>
+                <p class="case-italic">{item.italic}</p>
+
+                <div class="case-details">
+                  <div>
+                    <h4>Context</h4>
+                    <p>{item.context}</p>
+                  </div>
+                  <div>
+                    <h4>The hard decision</h4>
+                    <p>{item.decision}</p>
+                  </div>
+                  <div>
+                    <h4>Constraints</h4>
+                    <ul>
+                      {item.constraints.map((constraint) => (
+                        <li>
+                          <span>—</span>
+                          {constraint}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <h4>Measured against</h4>
+                    <p class="metric-line">{item.metrics.join(" · ")}</p>
+                  </div>
+                </div>
+              </div>
+              <div class={`case-visual ${index % 2 === 1 ? "case-visual-alt" : ""}`}>
+                <div class="image-frame">
+                  <img src={item.image} alt={item.title} width="1024" height="900" loading="lazy" />
+                </div>
+                <div class="figure-caption">
+                  <span>FIG. {item.n}</span>
+                  <span>{item.tag}</span>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </section>
+
+      <section id="lab" class="section-block">
+        <div class="section-rule">
+          <span>Section 02 — Lab Preview</span>
+          <span><a href="/lab">All projects</a></span>
+        </div>
+        <div class="lab-preview-stack">
+          {
+            labPreviews.map((item) => (
+              <div class={`lab-panel ${item.variant ?? ""}`}>
+                <div class="lab-copy">
+                  <span>{item.label}</span>
+                  <h3>{item.title}</h3>
+                  <p>{item.body}</p>
+                  <div class="lab-tags">
+                    {item.tags.map((tag) => (
+                      <div>{tag}</div>
+                    ))}
+                  </div>
+                </div>
+                <div class="loop-card">
+                  <div>
+                    <span>{item.system}</span>
+                    <span>{item.status}</span>
+                  </div>
+                  {item.lines.map((line) => <p>{line}</p>)}
+                </div>
+              </div>
+            ))
+          }
+        </div>
+      </section>
+
+      <section class="section-block">
+        <div class="section-rule">
+          <span>Section 03 — Resume</span>
+          <span><a href="/resume">Open Resume</a></span>
+        </div>
+
+        <div class="cv-grid">
+          <div class="profile-copy">
+            <h3>The factual version</h3>
+            <p>
+              Work is the argument. The resume is the evidence: roles, dates, impact, skills, education, and a downloadable PDF.
+            </p>
+          </div>
+          <div class="resume-cta-panel">
+            <div>
+              <span>Resume PDF</span>
+              <h3>Ishant Juyal — Product Manager</h3>
+              <p>
+                5 years across consumer apps, fintech, growth, product analytics,
+                experimentation, and 0 to 1 product building.
+              </p>
+            </div>
+            <a href="/resume">View Resume</a>
+          </div>
+        </div>
+      </section>
+
+      <SiteFooter />
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --portfolio-radius: 0.25rem;
+    --portfolio-background: oklch(0.984 0.002 90);
+    --portfolio-foreground: oklch(0.145 0.005 90);
+    --portfolio-muted: oklch(0.52 0.01 90);
+    --portfolio-accent: oklch(0.48 0.24 260);
+    --portfolio-border: oklch(0.145 0.005 90 / 8%);
+    --portfolio-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --portfolio-serif: "Newsreader", Georgia, serif;
+    --portfolio-mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background: var(--portfolio-background);
+    color: var(--portfolio-foreground);
+    font-family: var(--portfolio-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body ::selection {
+    background: oklch(0.48 0.24 260 / 10%);
+    color: var(--portfolio-accent);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  ul {
+    margin: 0;
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .portfolio-page {
+    min-height: 100vh;
+    padding: 1rem;
+    background: var(--portfolio-background);
+    color: var(--portfolio-foreground);
+  }
+
+  .portfolio-nav,
+  .hero,
+  .section-block,
+  .case-section {
+    width: 100%;
+    max-width: 72rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .portfolio-nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--portfolio-border);
+    background: oklch(0.984 0.002 90 / 94%);
+    padding: 0.85rem 0;
+    margin-bottom: 4rem;
+    backdrop-filter: blur(16px);
+  }
+
+  .portfolio-kicker,
+  .nav-links,
+  .section-rule,
+  .case-label,
+  .figure-caption,
+  .lab-copy > span,
+  .lab-tags,
+  .loop-card,
+  .job-row > div > p:first-child {
+    font-family: var(--portfolio-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .portfolio-kicker {
+    font-size: 0.75rem;
+    line-height: 1rem;
+    font-weight: 500;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .nav-links a {
+    transition: color 150ms ease;
+  }
+
+  .nav-links a:hover,
+  .nav-links a[aria-current="page"] {
+    color: var(--portfolio-accent);
+  }
+
+  .hero {
+    margin-bottom: 3.5rem;
+  }
+
+  .hero-title {
+    max-width: 100%;
+    margin-bottom: 1.75rem;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .hero-title span {
+    color: var(--portfolio-muted);
+    font-family: var(--portfolio-serif);
+    font-weight: 400;
+    font-style: italic;
+  }
+
+  .hero-status {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    width: fit-content;
+    border-radius: 9999px;
+    background: var(--portfolio-foreground);
+    color: var(--portfolio-background);
+    padding: 0.5rem 1rem;
+    font-family: var(--portfolio-mono);
+    font-size: 11px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .hero-status span {
+    color: var(--portfolio-muted);
+    font-family: var(--portfolio-mono);
+    font-size: 11px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .section-block {
+    margin-bottom: 5rem;
+  }
+
+  .section-rule {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    border-top: 1px solid var(--portfolio-border);
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+    color: var(--portfolio-muted);
+    font-size: 10px;
+    line-height: 1rem;
+  }
+
+  .case-section {
+    display: flex;
+    flex-direction: column;
+    gap: 5rem;
+    margin-bottom: 5rem;
+  }
+
+  .case-heading {
+    margin-bottom: 0.5rem;
+  }
+
+  .case-article {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .case-label {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--portfolio-muted);
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .case-copy h2 {
+    margin-bottom: 1.25rem;
+    font-size: 1.875rem;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: 0;
+  }
+
+  .case-italic {
+    margin-bottom: 2rem;
+    color: var(--portfolio-muted);
+    font-family: var(--portfolio-serif);
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    font-style: italic;
+  }
+
+  .case-details {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border-left: 2px solid oklch(0.48 0.24 260 / 30%);
+    padding-left: 1.5rem;
+  }
+
+  .case-details h4 {
+    margin-bottom: 0.5rem;
+    font-family: var(--portfolio-mono);
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .case-details p,
+  .case-details ul {
+    color: oklch(0.145 0.005 90 / 80%);
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  .case-details ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .case-details li,
+  .job-row li {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .case-details li span,
+  .job-row li span:first-child {
+    color: var(--portfolio-accent);
+    font-family: var(--portfolio-mono);
+  }
+
+  .case-details .metric-line {
+    color: oklch(0.145 0.005 90 / 70%);
+    font-family: var(--portfolio-mono);
+    font-size: 0.75rem;
+    line-height: 1.625;
+  }
+
+  .image-frame {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 0.125rem;
+    background: #f4f4f5;
+    outline: 1px solid rgb(0 0 0 / 5%);
+    outline-offset: -1px;
+  }
+
+  .image-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .figure-caption {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.75rem;
+    color: var(--portfolio-muted);
+    font-size: 10px;
+    line-height: 1rem;
+  }
+
+  .lab-preview-stack {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .lab-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 2.5rem;
+    border-radius: 0.125rem;
+    background: var(--portfolio-accent);
+    color: var(--portfolio-background);
+    padding: 2.5rem;
+  }
+
+  .lab-panel-alt {
+    background: var(--portfolio-foreground);
+  }
+
+  .lab-panel::selection,
+  .lab-panel *::selection {
+    background: oklch(0.145 0.005 90 / 35%);
+    color: var(--portfolio-background);
+  }
+
+  .lab-copy {
+    max-width: 36rem;
+  }
+
+  .lab-copy > span {
+    display: block;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+    font-size: 10px;
+    line-height: 1rem;
+  }
+
+  .lab-copy h3 {
+    margin-bottom: 1.25rem;
+    font-size: 2.25rem;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: 0;
+  }
+
+  .lab-copy p {
+    margin-bottom: 2rem;
+    opacity: 0.9;
+    line-height: 1.625;
+    text-wrap: pretty;
+  }
+
+  .lab-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    font-size: 10px;
+    line-height: 1rem;
+  }
+
+  .lab-tags div {
+    border: 1px solid oklch(0.984 0.002 90 / 30%);
+    border-radius: 9999px;
+    padding: 0.25rem 0.75rem;
+  }
+
+  .lab-panel-alt .lab-tags div {
+    border-color: oklch(0.984 0.002 90 / 22%);
+  }
+
+  .loop-card {
+    width: 100%;
+    flex-shrink: 0;
+    border: 1px solid oklch(0.984 0.002 90 / 20%);
+    background: oklch(0.984 0.002 90 / 5%);
+    padding: 1.5rem;
+    font-size: 11px;
+    line-height: 1.625;
+    text-transform: none;
+  }
+
+  .loop-card > div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+    opacity: 0.7;
+  }
+
+  .loop-card p:nth-of-type(2),
+  .loop-card p:nth-of-type(3),
+  .loop-card p:nth-of-type(4) {
+    opacity: 0.8;
+  }
+
+  .loop-card p:last-child {
+    margin-top: 1rem;
+    opacity: 0.7;
+  }
+
+  .cv-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .profile-copy h3 {
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 800;
+    line-height: 2rem;
+    letter-spacing: 0;
+  }
+
+  .profile-copy p {
+    color: oklch(0.145 0.005 90 / 80%);
+    font-size: 0.875rem;
+    line-height: 1.625;
+  }
+
+  .job-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .resume-cta-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    border: 1px solid var(--portfolio-border);
+    background: var(--portfolio-background);
+    padding: 1.5rem;
+  }
+
+  .resume-cta-panel span {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--portfolio-muted);
+    font-family: var(--portfolio-mono);
+    font-size: 10px;
+    line-height: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .resume-cta-panel h3 {
+    margin-bottom: 0.75rem;
+    font-size: 1.875rem;
+    font-weight: 800;
+    line-height: 1.05;
+  }
+
+  .resume-cta-panel p {
+    max-width: 34rem;
+    color: oklch(0.145 0.005 90 / 80%);
+    font-size: 0.95rem;
+    line-height: 1.625;
+  }
+
+  .resume-cta-panel a {
+    width: fit-content;
+    border-radius: 9999px;
+    background: var(--portfolio-foreground);
+    color: var(--portfolio-background);
+    padding: 0.65rem 1rem;
+    font-family: var(--portfolio-mono);
+    font-size: 11px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .job-row {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1rem;
+    border-top: 1px solid var(--portfolio-border);
+    padding-top: 1.5rem;
+  }
+
+  .job-row > div,
+  .job-row > ul {
+    grid-column: span 12 / span 12;
+  }
+
+  .job-row > div > p:first-child {
+    color: var(--portfolio-muted);
+    font-size: 11px;
+    line-height: 1rem;
+  }
+
+  .job-row > div > p:nth-child(2) {
+    margin-top: 0.25rem;
+    font-weight: 800;
+  }
+
+  .job-row > div > p:nth-child(3) {
+    color: var(--portfolio-muted);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .job-row > ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    color: oklch(0.145 0.005 90 / 85%);
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+
+  .job-row li {
+    gap: 0.75rem;
+  }
+
+  .job-row li span:first-child {
+    flex-shrink: 0;
+  }
+
+  .reveal {
+    animation: reveal 0.9s var(--ease-out-expo) both;
+  }
+
+  .delay-80 {
+    animation-delay: 80ms;
+  }
+
+  .delay-160 {
+    animation-delay: 160ms;
+  }
+
+  .delay-240 {
+    animation-delay: 240ms;
+  }
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .portfolio-page {
+      padding: 2rem;
+    }
+
+    .portfolio-nav {
+      margin-bottom: 5rem;
+    }
+
+    .nav-links {
+      gap: 2rem;
+    }
+
+    .hero {
+      margin-bottom: 4.5rem;
+    }
+
+    .hero-title {
+      margin-bottom: 2rem;
+      font-size: 4.5rem;
+    }
+
+    .section-block {
+      margin-bottom: 6rem;
+    }
+
+    .case-section {
+      gap: 6rem;
+      margin-bottom: 6rem;
+    }
+
+    .case-heading {
+      margin-bottom: 0.5rem;
+    }
+
+    .case-article {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 3rem;
+    }
+
+    .case-copy {
+      grid-column: span 5 / span 5;
+    }
+
+    .case-copy-alt {
+      order: 2;
+    }
+
+    .case-copy h2 {
+      font-size: 2.25rem;
+    }
+
+    .case-visual {
+      grid-column: span 7 / span 7;
+    }
+
+    .case-visual-alt {
+      order: 1;
+    }
+
+    .lab-panel {
+      flex-direction: row;
+      gap: 3rem;
+      padding: 3rem;
+    }
+
+    .lab-copy h3 {
+      font-size: 3rem;
+    }
+
+    .loop-card {
+      width: 18rem;
+    }
+
+    .cv-grid {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+    }
+
+    .profile-copy {
+      grid-column: span 4 / span 4;
+    }
+
+    .job-list {
+      grid-column: span 8 / span 8;
+    }
+
+    .resume-cta-panel {
+      grid-column: span 8 / span 8;
+      padding: 2rem;
+    }
+
+    .job-row > div {
+      grid-column: span 4 / span 4;
+    }
+
+    .job-row > ul {
+      grid-column: span 8 / span 8;
+    }
+
+  }
+</style>

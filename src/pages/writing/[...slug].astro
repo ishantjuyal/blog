@@ -1,0 +1,165 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { getCollection } from "astro:content";
+
+export async function getStaticPaths() {
+  const posts = await getCollection("posts");
+
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+const title = `${post.data.title} — Ishant Juyal`;
+const description = post.data.description || `${post.data.title} by Ishant Juyal.`;
+const canonicalURL = new URL(`/writing/${post.slug}`, Astro.site).toString();
+---
+
+<SiteLayout
+  title={title}
+  description={description}
+  canonicalURL={canonicalURL}
+>
+  <main>
+    <header class="article-hero reveal">
+      <a class="back-link" href="/writing">Writing index</a>
+      <span class="eyebrow">{formatDate(post.data.date)}</span>
+      <h1 class="article-title">{post.data.title}</h1>
+      {post.data.description && <p class="article-lede">{post.data.description}</p>}
+    </header>
+
+    <article class="article-body reveal delay-80">
+      <Content />
+    </article>
+  </main>
+</SiteLayout>
+
+<style>
+  .article-hero,
+  .article-body {
+    width: 100%;
+    max-width: 46rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .article-hero {
+    margin-bottom: 4rem;
+  }
+
+  .back-link {
+    display: inline-flex;
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--site-border);
+    padding-bottom: 0.25rem;
+    color: var(--site-muted);
+    font-family: var(--site-mono);
+    font-size: 0.75rem;
+    line-height: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition: color 150ms ease;
+  }
+
+  .back-link:hover {
+    color: var(--site-accent);
+  }
+
+  .article-title {
+    margin-bottom: 1.5rem;
+    font-size: 3.25rem;
+    font-weight: 800;
+    line-height: 0.96;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .article-lede {
+    color: var(--site-muted);
+    font-size: 1.2rem;
+    line-height: 1.625;
+    text-wrap: pretty;
+  }
+
+  .article-body {
+    margin-bottom: 9rem;
+    color: oklch(0.145 0.005 90 / 88%);
+    font-size: 1.05rem;
+    line-height: 1.8;
+  }
+
+  .article-body :global(p),
+  .article-body :global(ul),
+  .article-body :global(ol) {
+    margin-bottom: 1.35rem;
+  }
+
+  .article-body :global(ul),
+  .article-body :global(ol) {
+    padding-left: 1.25rem;
+  }
+
+  .article-body :global(ul) {
+    list-style: disc;
+  }
+
+  .article-body :global(ol) {
+    list-style: decimal;
+  }
+
+  .article-body :global(li) {
+    padding-left: 0.25rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .article-body :global(strong) {
+    color: var(--site-foreground);
+    font-weight: 800;
+  }
+
+  .article-body :global(h2),
+  .article-body :global(h3) {
+    margin: 2.5rem 0 1rem;
+    color: var(--site-foreground);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0;
+  }
+
+  .article-body :global(h2) {
+    font-size: 1.9rem;
+  }
+
+  .article-body :global(h3) {
+    font-size: 1.35rem;
+  }
+
+  .article-body :global(a) {
+    color: var(--site-accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  @media (min-width: 768px) {
+    .article-title {
+      font-size: 5rem;
+    }
+
+    .article-lede {
+      font-size: 1.35rem;
+    }
+  }
+</style>

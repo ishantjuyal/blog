@@ -1,0 +1,299 @@
+---
+const mixpanelToken = import.meta.env.PUBLIC_MIXPANEL_TOKEN || "";
+const mixpanelAllowedHosts = (
+  import.meta.env.PUBLIC_MIXPANEL_ALLOWED_HOSTS || "ishantjuyal.com,www.ishantjuyal.com"
+)
+  .split(",")
+  .map((host) => host.trim().toLowerCase())
+  .filter(Boolean);
+---
+
+<script define:vars={{ mixpanelToken, mixpanelAllowedHosts }}>
+  (() => {
+    const token = mixpanelToken;
+    const allowedHosts = mixpanelAllowedHosts;
+    const hostname = window.location.hostname.toLowerCase();
+    const isAllowedSiteHost = (hostToCheck) => {
+      const normalizedHost = String(hostToCheck || "").toLowerCase();
+      return allowedHosts.some(
+        (host) => normalizedHost === host || normalizedHost.endsWith(`.${host}`),
+      );
+    };
+    const isAllowedHost = isAllowedSiteHost(hostname);
+
+    if (!token || !isAllowedHost) {
+      window.mixpanelTrack = () => {};
+      return;
+    }
+
+    function compactProperties(properties) {
+      return Object.fromEntries(
+        Object.entries(properties).filter(([, value]) => {
+          if (value === undefined || value === null || value === "") return false;
+          if (Array.isArray(value) && value.length === 0) return false;
+          return true;
+        }),
+      );
+    }
+
+    function truncate(value, maxLength = 96) {
+      if (!value) return "";
+      const normalized = String(value).replace(/\s+/g, " ").trim();
+      return normalized.length > maxLength ? `${normalized.slice(0, maxLength - 1)}...` : normalized;
+    }
+
+    function getPageSection(pathname) {
+      const normalizedPath = pathname.replace(/\/$/, "") || "/";
+      if (normalizedPath === "/") return "home";
+      return normalizedPath.split("/").filter(Boolean)[0] || "unknown";
+    }
+
+    function getUtmProperties(searchParams) {
+      const utmProperties = {};
+      ["source", "medium", "campaign", "term", "content"].forEach((key) => {
+        const value = searchParams.get(`utm_${key}`);
+        if (value) utmProperties[`utm_${key}`] = truncate(value, 120);
+      });
+      return utmProperties;
+    }
+
+    function getReferrerDomain() {
+      if (!document.referrer) return "";
+      try {
+        return new URL(document.referrer).hostname;
+      } catch {
+        return "";
+      }
+    }
+
+    function getBaseProperties() {
+      const searchParams = new URLSearchParams(window.location.search);
+      return compactProperties({
+        page_path: window.location.pathname,
+        page_title: document.title,
+        page_section: getPageSection(window.location.pathname),
+        hostname: window.location.hostname,
+        referrer_domain: getReferrerDomain(),
+        ...getUtmProperties(searchParams),
+      });
+    }
+
+    function safeTrack(eventName, properties = {}) {
+      if (!window.mixpanel || typeof window.mixpanel.track !== "function") return;
+      window.mixpanel.track(eventName, compactProperties({ ...getBaseProperties(), ...properties }));
+    }
+
+    function getLinkUrl(anchor) {
+      try {
+        return new URL(anchor.getAttribute("href"), window.location.href);
+      } catch {
+        return null;
+      }
+    }
+
+    function getLinkText(anchor) {
+      const ariaLabel = anchor.getAttribute("aria-label");
+      return truncate(ariaLabel || anchor.innerText || anchor.textContent || anchor.href);
+    }
+
+    function getLinkContext(anchor) {
+      if (anchor.closest(".site-nav, .portfolio-nav, .nav-links")) return "primary_navigation";
+      if (anchor.closest(".site-footer, .portfolio-footer, footer")) return "footer";
+      if (anchor.closest(".hero-social")) return "hero_social";
+      if (anchor.closest(".newsletter-panel")) return "newsletter_panel";
+      if (anchor.closest(".section-rule")) return "section_header";
+      if (anchor.closest(".route-card, .route-grid")) return "route_card";
+      if (anchor.closest(".writing-list, .editorial-list, .post-list")) return "writing_list";
+      if (anchor.closest(".project-card, .project-grid")) return "project_card";
+      if (anchor.closest(".resume-actions, .resume-cta-panel, .resume-top")) return "resume";
+      if (anchor.closest(".hero-note, .footer-contact")) return "call_to_action";
+      return "body";
+    }
+
+    function getPostSlug(url) {
+      const pathname = url.pathname.replace(/\/$/, "");
+      if (pathname.startsWith("/writing/")) return pathname.replace(/^\/writing\//, "");
+      return "";
+    }
+
+    function getNewsletterProperties(anchor, url) {
+      const panel = anchor.closest(".newsletter-panel");
+      const panelTitle = panel?.querySelector("h2")?.textContent;
+      const panelLabel = panel?.querySelector(".route-meta")?.textContent;
+      const hostname = url.hostname.toLowerCase();
+      const fallbackName = hostname.includes("pmquest")
+        ? "PM Quest Newsletter"
+        : "Ishant's Notes";
+
+      return compactProperties({
+        newsletter_name: truncate(panelTitle || fallbackName),
+        newsletter_type: truncate(panelLabel || (hostname.includes("pmquest") ? "product" : "personal")),
+        destination_domain: url.hostname,
+      });
+    }
+
+    function getSocialPlatform(url) {
+      const hostname = url.hostname.toLowerCase();
+      if (hostname.includes("linkedin.com")) return "linkedin";
+      if (hostname.includes("github.com")) return "github";
+      if (hostname === "x.com" || hostname.includes("twitter.com")) return "x";
+      return "";
+    }
+
+    function getProjectProperties(anchor, url) {
+      const projectCard = anchor.closest(".project-card");
+      if (!projectCard) return {};
+
+      const projectName = projectCard.querySelector("h2")?.textContent;
+      const projectType = projectCard.querySelector(".project-topline span:last-child")?.textContent;
+      const projectCode = projectCard.querySelector(".shot-bar span:first-child")?.textContent;
+
+      return compactProperties({
+        project_name: truncate(projectName),
+        project_type: truncate(projectType),
+        project_code: truncate(projectCode),
+        destination_domain: url.hostname,
+      });
+    }
+
+    function getResumeAction(anchor) {
+      if (anchor.hasAttribute("download")) return "download";
+      if (anchor.target === "_blank") return "open";
+      return "view";
+    }
+
+    function isResumePage(url) {
+      const pathname = url.pathname.replace(/\/$/, "") || "/";
+      return pathname === "/resume";
+    }
+
+    function isNewsletterLink(anchor, url) {
+      return Boolean(anchor.closest(".newsletter-panel")) || url.hostname.endsWith("substack.com");
+    }
+
+    function handleLinkClick(event) {
+      const target =
+        event.target instanceof Element ? event.target : event.target?.parentElement;
+      const anchor = target?.closest("a[href]");
+      if (!anchor || anchor.dataset.mixpanelIgnore === "true") return;
+
+      const url = getLinkUrl(anchor);
+      if (!url) return;
+
+      const href = anchor.getAttribute("href") || "";
+      const linkText = getLinkText(anchor);
+      const linkContext = getLinkContext(anchor);
+      const socialPlatform = getSocialPlatform(url);
+      const isHttpUrl = url.protocol === "http:" || url.protocol === "https:";
+      const isExternal = isHttpUrl && !isAllowedSiteHost(url.hostname);
+      const baseLinkProperties = {
+        link_text: linkText,
+        link_context: linkContext,
+        destination_path: href.startsWith("mailto:") ? "" : url.pathname,
+      };
+
+      if (href.startsWith("mailto:")) {
+        safeTrack("contact_link_clicked", {
+          contact_method: "email",
+          link_context: linkContext,
+        });
+        return;
+      }
+
+      if (href.startsWith("tel:")) {
+        safeTrack("contact_link_clicked", {
+          contact_method: "phone",
+          link_context: linkContext,
+        });
+        return;
+      }
+
+      if (url.pathname.endsWith(".pdf") || url.pathname.startsWith("/files/")) {
+        safeTrack("resume_pdf_clicked", {
+          ...baseLinkProperties,
+          resume_action: getResumeAction(anchor),
+        });
+        return;
+      }
+
+      if (isResumePage(url)) {
+        safeTrack("resume_opened", {
+          ...baseLinkProperties,
+          resume_action: "view_page",
+        });
+        return;
+      }
+
+      if (isNewsletterLink(anchor, url)) {
+        safeTrack("newsletter_opened", {
+          link_context: linkContext,
+          destination_path: url.pathname,
+          ...getNewsletterProperties(anchor, url),
+        });
+        return;
+      }
+
+      if (socialPlatform) {
+        safeTrack("social_link_clicked", {
+          ...baseLinkProperties,
+          social_platform: socialPlatform,
+          destination_domain: url.hostname,
+        });
+        return;
+      }
+
+      if (anchor.closest(".project-card")) {
+        safeTrack("project_opened", {
+          ...baseLinkProperties,
+          ...getProjectProperties(anchor, url),
+        });
+        return;
+      }
+
+      if (getPostSlug(url)) {
+        safeTrack("writing_opened", {
+          ...baseLinkProperties,
+          post_slug: getPostSlug(url),
+        });
+        return;
+      }
+
+      if (isExternal) {
+        safeTrack("outbound_link_clicked", {
+          ...baseLinkProperties,
+          destination_domain: url.hostname,
+        });
+        return;
+      }
+
+      safeTrack("navigation_clicked", {
+        ...baseLinkProperties,
+      });
+    }
+
+    function initMixpanel() {
+      if (!window.mixpanel || typeof window.mixpanel.init !== "function") return;
+
+      window.mixpanel.init(token, {
+        debug: false,
+        track_pageview: false,
+        persistence: "localStorage",
+      });
+
+      window.mixpanel.register({
+        platform: "web",
+        site_name: "ishant_juyal_personal_site",
+      });
+
+      window.mixpanelTrack = safeTrack;
+      safeTrack("page_viewed");
+      document.addEventListener("click", handleLinkClick, true);
+    }
+
+    const script = document.createElement("script");
+    script.async = true;
+    script.src = "https://cdn.mxpnl.com/libs/mixpanel-2-latest.min.js";
+    script.addEventListener("load", initMixpanel);
+    document.head.appendChild(script);
+  })();
+</script>

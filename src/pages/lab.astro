@@ -1,0 +1,321 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+
+const projects = [
+  {
+    name: "PM Quest",
+    url: "https://pmquest.ishantjuyal.com/",
+    type: "Practice product",
+    status: "Live",
+    metricLabel: "North star",
+    metric: "WAU",
+    description:
+      "A daily PM-practice loop for prompts, answers, AI feedback, peer comparison, and streaks.",
+    owned: "Activation loop, feedback system, retention experiments, product narrative.",
+    tags: ["AI feedback", "Streaks", "Learning loop"],
+    code: "PMQ",
+  },
+  {
+    name: "TailorUp",
+    url: "https://tailorup.vercel.app/",
+    type: "Utility",
+    status: "Live",
+    metricLabel: "Job-to-resume",
+    metric: "2 min",
+    description: "Tailor your resume for any job in a few minutes.",
+    owned: "Problem framing, flow design, shipping, positioning.",
+    tags: ["Resume", "AI utility", "Career"],
+    code: "TLR",
+  },
+  {
+    name: "Appvia",
+    url: "https://www.appvia.live/",
+    type: "Voice-of-customer tool",
+    status: "Live",
+    metricLabel: "Adoption",
+    metric: "5-6 teams",
+    description: "Play Store reviews of your app, auto-delivered to your Slack.",
+    owned:
+      "Built from a Pickup Coffee need: daily Play Store review monitoring, Slack delivery, issue visibility, and product packaging.",
+    tags: ["Play Store", "Slack bot", "VOC ops"],
+    code: "APV",
+  },
+  {
+    name: "Loopwise",
+    url: "https://www.loopwise.live/",
+    type: "Feedback tool",
+    status: "Live",
+    metricLabel: "Loop",
+    metric: "Feedback",
+    description: "Collect feedback that actually moves things.",
+    owned: "Feedback model, landing narrative, product loop.",
+    tags: ["Feedback", "SaaS", "Research"],
+    code: "LPW",
+  },
+  {
+    name: "Secret Santa Organizer",
+    url: "https://www.secretsanta.world/",
+    type: "Seasonal app",
+    status: "Live",
+    metricLabel: "Use case",
+    metric: "Groups",
+    description: "An online Secret Santa gift exchange organizer.",
+    owned: "Group flow, participant matching, lightweight consumer UX.",
+    tags: ["Consumer", "Groups", "Utility"],
+    code: "SSO",
+  },
+  {
+    name: "Year Progress Tracker",
+    url: "https://chromewebstore.google.com/detail/acdnmoeegibdamcidkjohklcnnhghfdf?utm_source=item-share-cb",
+    type: "Chrome extension",
+    status: "Live",
+    metricLabel: "Surface",
+    metric: "Chrome",
+    description: "A Chrome extension to help people track yearly progress and goals.",
+    owned: "Extension concept, progress visualization, launch.",
+    tags: ["Chrome", "Habits", "Progress"],
+    code: "YPT",
+  },
+  {
+    name: "Focus Hours",
+    url: "https://chromewebstore.google.com/detail/focus-hours/ogldhbljdkjlcmlfhlebfbfnonlahflh?authuser=0&hl=en-GB",
+    type: "Chrome extension",
+    status: "Live",
+    metricLabel: "Behavior",
+    metric: "Focus",
+    description: "Maintain better focus by blocking specific websites.",
+    owned: "Focus workflow, blocking rules, extension packaging.",
+    tags: ["Chrome", "Focus", "Behavior"],
+    code: "FCS",
+  },
+];
+
+const title = "Lab — Ishant Juyal";
+const description =
+  "Side projects, experiments, and shipped products by Ishant Juyal.";
+---
+
+<SiteLayout title={title} description={description}>
+  <main>
+    <header class="page-hero page-hero-compact reveal">
+      <span class="eyebrow">Ishant Juyal — Lab</span>
+      <h1 class="page-title">
+        Side projects, experiments, and small products that show <em>how I build when nobody asks.</em>
+      </h1>
+    </header>
+
+    <section class="site-section">
+      <div class="section-rule">
+        <span>Project index</span>
+        <span>Live products</span>
+      </div>
+      <div class="project-grid">
+        {
+          projects.map((project, index) => (
+            <a
+              class={`project-card ${index === 0 ? "project-card-featured" : ""}`}
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="project-shot" aria-hidden="true">
+                <div class="shot-bar">
+                  <span>{project.code}</span>
+                  <span>{project.status}</span>
+                </div>
+                <div class="shot-main">
+                  <span>{project.metric}</span>
+                  <small>{project.metricLabel}</small>
+                </div>
+                <div class="shot-lines">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </div>
+
+              <div class="project-copy">
+                <div class="project-topline">
+                  <span class="project-status">{project.status}</span>
+                  <span>{project.type}</span>
+                </div>
+                <h2>{project.name}</h2>
+                <p>{project.description}</p>
+                <div class="project-owned">
+                  <span>Owned</span>
+                  <p>{project.owned}</p>
+                </div>
+                <div class="tag-row">
+                  {project.tags.map((tag) => <span>{tag}</span>)}
+                </div>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+</SiteLayout>
+
+<style>
+  .project-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    border: 1px solid var(--site-border);
+    background: var(--site-border);
+  }
+
+  .project-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    background: var(--site-background);
+    padding: 1.5rem;
+    transition:
+      background 150ms ease,
+      color 150ms ease;
+  }
+
+  .project-card:hover {
+    background: var(--site-foreground);
+    color: var(--site-background);
+  }
+
+  .project-card:hover p,
+  .project-card:hover .project-topline,
+  .project-card:hover .project-owned span,
+  .project-card:hover .tag-row {
+    color: oklch(0.984 0.002 90 / 72%);
+  }
+
+  .project-card:hover .project-shot {
+    border-color: oklch(0.984 0.002 90 / 16%);
+    background: oklch(0.984 0.002 90 / 8%);
+  }
+
+  .project-shot {
+    min-height: 16rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border: 1px solid var(--site-border);
+    background:
+      linear-gradient(135deg, oklch(0.48 0.24 260 / 8%), transparent 42%),
+      var(--site-soft);
+    padding: 1rem;
+  }
+
+  .shot-bar,
+  .project-topline,
+  .project-owned span {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    color: var(--site-muted);
+    font-family: var(--site-mono);
+    font-size: 10px;
+    line-height: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .shot-main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .shot-main span {
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: 0;
+  }
+
+  .shot-main small {
+    color: var(--site-muted);
+    font-family: var(--site-serif);
+    font-size: 1.125rem;
+    font-style: italic;
+  }
+
+  .shot-lines {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .shot-lines span {
+    height: 0.5rem;
+    background: oklch(0.145 0.005 90 / 12%);
+  }
+
+  .shot-lines span:nth-child(1) {
+    width: 80%;
+  }
+
+  .shot-lines span:nth-child(2) {
+    width: 58%;
+  }
+
+  .shot-lines span:nth-child(3) {
+    width: 34%;
+  }
+
+  .project-copy {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .project-topline {
+    margin-bottom: 1.5rem;
+  }
+
+  .project-card h2 {
+    margin-bottom: 1rem;
+  }
+
+  .project-card p {
+    margin-bottom: 1.5rem;
+  }
+
+  .project-owned {
+    margin-top: auto;
+    margin-bottom: 1.5rem;
+  }
+
+  .project-owned span {
+    margin-bottom: 0.5rem;
+  }
+
+  .project-owned p {
+    margin: 0;
+    font-size: 0.875rem;
+  }
+
+  @media (min-width: 768px) {
+    .project-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .project-card {
+      min-height: 34rem;
+      padding: 2rem;
+    }
+
+    .project-card-featured {
+      grid-column: span 2 / span 2;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+      align-items: stretch;
+      min-height: 28rem;
+    }
+
+    .project-card-featured .project-shot {
+      min-height: 24rem;
+    }
+
+    .project-card-featured .shot-main span {
+      font-size: 4.5rem;
+    }
+  }
+</style>

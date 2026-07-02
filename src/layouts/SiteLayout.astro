@@ -1,0 +1,460 @@
+---
+import MixpanelTracker from "../components/MixpanelTracker.astro";
+import SiteFooter from "../components/SiteFooter.astro";
+
+export interface Props {
+  title: string;
+  description: string;
+  canonicalURL?: string;
+}
+
+const {
+  title,
+  description,
+  canonicalURL = new URL(Astro.url.pathname, Astro.site).toString(),
+} = Astro.props;
+
+const navItems = [
+  { label: "Work", href: "/work" },
+  { label: "Lab", href: "/lab" },
+  { label: "Writing", href: "/writing" },
+  { label: "Resume", href: "/resume" },
+];
+
+const path = Astro.url.pathname.replace(/\/$/, "") || "/";
+
+function isActive(href: string) {
+  if (href === "/") return path === "/";
+  return path === href || path.startsWith(`${href}/`);
+}
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="author" content="Ishant Juyal" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&display=swap"
+    />
+    <MixpanelTracker />
+  </head>
+  <body>
+    <div class="site-shell">
+      <nav class="site-nav reveal">
+        <a class="site-mark" href="/">Ishant Juyal</a>
+        <div class="site-links" aria-label="Primary navigation">
+          {
+            navItems.map((item) => (
+              <a href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>
+                {item.label}
+              </a>
+            ))
+          }
+        </div>
+      </nav>
+
+      <slot />
+
+      <SiteFooter />
+    </div>
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --site-background: oklch(0.984 0.002 90);
+    --site-foreground: oklch(0.145 0.005 90);
+    --site-muted: oklch(0.52 0.01 90);
+    --site-accent: oklch(0.48 0.24 260);
+    --accent-blue: oklch(0.52 0.23 260);
+    --accent-violet: oklch(0.52 0.18 304);
+    --site-border: oklch(0.145 0.005 90 / 8%);
+    --site-soft: oklch(0.96 0.004 90);
+    --site-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --site-serif: "Newsreader", Georgia, serif;
+    --site-mono: "JetBrains Mono", Menlo, Consolas, monospace;
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    min-width: 320px;
+    margin: 0;
+    background: var(--site-background);
+    color: var(--site-foreground);
+    font-family: var(--site-sans);
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  body ::selection {
+    background: oklch(0.48 0.24 260 / 10%);
+    color: var(--site-accent);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--site-accent);
+    outline-offset: 3px;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  p,
+  ul {
+    margin: 0;
+  }
+
+  ul {
+    padding: 0;
+    list-style: none;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  img {
+    display: block;
+    max-width: 100%;
+  }
+
+  .site-shell {
+    min-height: 100vh;
+    padding: 1rem;
+  }
+
+  .site-nav,
+  .page-hero,
+  .site-section {
+    width: 100%;
+    max-width: 72rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  .site-nav {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    border-bottom: 1px solid var(--site-border);
+    background: oklch(0.984 0.002 90 / 94%);
+    padding: 0.85rem 0;
+    margin-bottom: 4rem;
+    backdrop-filter: blur(16px);
+  }
+
+  .site-mark,
+  .site-links,
+  .eyebrow,
+  .section-rule,
+  .route-meta,
+  .tag-row,
+  .stat-label,
+  .project-status {
+    font-family: var(--site-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .site-mark {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1rem;
+  }
+
+  .site-links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 1rem;
+    color: var(--site-muted);
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .site-links a,
+  .text-link {
+    transition: color 150ms ease;
+  }
+
+  .site-links a:hover,
+  .site-links a[aria-current="page"],
+  .text-link:hover {
+    color: var(--site-accent);
+  }
+
+  .page-hero {
+    margin-bottom: 7rem;
+  }
+
+  .eyebrow {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--site-muted);
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
+  .page-title {
+    max-width: 68rem;
+    margin-bottom: 2.5rem;
+    font-size: 3rem;
+    font-weight: 800;
+    line-height: 0.92;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .page-title em {
+    color: var(--site-muted);
+    font-family: var(--site-serif);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  .page-hero-compact {
+    margin-bottom: 3rem;
+  }
+
+  .page-hero-compact .page-title {
+    margin-bottom: 0;
+  }
+
+  .page-lede {
+    max-width: 44rem;
+    color: var(--site-muted);
+    font-size: 1.25rem;
+    line-height: 1.625;
+    text-wrap: pretty;
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .hero-note {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0.75rem;
+  }
+
+  .pill {
+    width: fit-content;
+    border-radius: 9999px;
+    background: var(--site-foreground);
+    color: var(--site-background);
+    padding: 0.5rem 1rem;
+    font-family: var(--site-mono);
+    font-size: 11px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .site-section {
+    margin-bottom: 5rem;
+  }
+
+  .section-rule {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid var(--site-border);
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+    color: var(--site-muted);
+    font-size: 10px;
+    line-height: 1rem;
+  }
+
+  .route-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    border: 1px solid var(--site-border);
+    background: var(--site-border);
+    gap: 1px;
+  }
+
+  .route-card {
+    min-height: 18rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 2rem;
+    background: var(--site-background);
+    padding: 1.5rem;
+    transition:
+      background 150ms ease,
+      color 150ms ease;
+  }
+
+  .route-card:hover {
+    background: var(--site-foreground);
+    color: var(--site-background);
+  }
+
+  .route-card:hover p,
+  .route-card:hover .route-meta {
+    color: oklch(0.984 0.002 90 / 72%);
+  }
+
+  .route-card h2,
+  .project-card h2,
+  .editorial-list h2 {
+    margin-bottom: 1rem;
+    font-size: 1.875rem;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .route-card p,
+  .project-card p,
+  .editorial-list p {
+    color: oklch(0.145 0.005 90 / 78%);
+    font-size: 0.95rem;
+    line-height: 1.625;
+    text-wrap: pretty;
+  }
+
+  .route-meta {
+    color: var(--site-muted);
+    font-size: 10px;
+    line-height: 1rem;
+  }
+
+  .text-link {
+    color: var(--site-accent);
+    font-weight: 700;
+  }
+
+  .tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    color: var(--site-muted);
+    font-size: 10px;
+    line-height: 1rem;
+  }
+
+  .tag-row span {
+    border: 1px solid var(--site-border);
+    border-radius: 9999px;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .reveal {
+    animation: reveal 0.9s var(--ease-out-expo) both;
+  }
+
+  .delay-80 {
+    animation-delay: 80ms;
+  }
+
+  .delay-160 {
+    animation-delay: 160ms;
+  }
+
+  @keyframes reveal {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (min-width: 768px) {
+    .site-shell {
+      padding: 2rem;
+    }
+
+    .site-nav {
+      margin-bottom: 5rem;
+    }
+
+    .site-links {
+      gap: 2rem;
+    }
+
+    .page-hero {
+      margin-bottom: 8rem;
+    }
+
+    .page-title {
+      margin-bottom: 3rem;
+      font-size: 4.5rem;
+    }
+
+    .page-hero-compact {
+      margin-bottom: 3.5rem;
+    }
+
+    .page-hero-compact .page-title {
+      margin-bottom: 0;
+    }
+
+    .page-lede {
+      font-size: 1.5rem;
+    }
+
+    .hero-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 3rem;
+    }
+
+    .hero-note {
+      align-items: flex-end;
+    }
+
+    .site-section {
+      margin-bottom: 6rem;
+    }
+
+    .route-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .route-card {
+      padding: 2rem;
+    }
+
+  }
+</style>

@@ -1,0 +1,362 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { resume } from "../data/resume";
+
+const title = "Resume — Ishant Juyal";
+const description =
+  "Resume and downloadable PDF for Ishant Juyal, product manager and ex-founder.";
+---
+
+<SiteLayout title={title} description={description}>
+  <main>
+    <header class="resume-header reveal">
+      <div>
+        <h1>Resume</h1>
+      </div>
+      <div class="resume-actions">
+        <a href={resume.pdfPath} download>Download PDF</a>
+        <a href={resume.pdfPath} target="_blank" rel="noopener noreferrer">Open PDF</a>
+      </div>
+    </header>
+
+    <section class="resume-stage">
+      <article class="resume-sheet" aria-label="Resume preview">
+        <header class="resume-top">
+          <div>
+            <h2>{resume.name}</h2>
+            <p>{resume.summary}</p>
+          </div>
+          <ul>
+            {
+              resume.contacts.map((contact) => (
+                <li><a href={contact.href}>{contact.value}</a></li>
+              ))
+            }
+          </ul>
+        </header>
+
+        <section class="resume-section">
+          <div class="resume-rule">
+            <span>Experience</span>
+            <span>2021 - Present</span>
+          </div>
+          <div class="experience-list">
+            {
+              resume.experience.map((job) => (
+                <section class="experience-item">
+                  <div class="job-heading">
+                    <div>
+                      <h3>{job.role}</h3>
+                      <p>
+                        {
+                          "companyParts" in job
+                            ? job.companyParts.map((part) =>
+                                "href" in part ? (
+                                  <a href={part.href} target="_blank" rel="noopener noreferrer">
+                                    {part.text}
+                                  </a>
+                                ) : (
+                                  part.text
+                                ),
+                              )
+                            : job.company
+                        }
+                      </p>
+                    </div>
+                    <span>{job.period}</span>
+                  </div>
+                  <ul>
+                    {job.bullets.map((bullet) => (
+                      <li>{bullet}</li>
+                    ))}
+                  </ul>
+                </section>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="resume-section">
+          <div class="resume-rule">
+            <span>Skills</span>
+            <span>Product · Growth · Analytics</span>
+          </div>
+          <div class="skill-list">
+            {
+              resume.skills.map((skill) => (
+                <div>
+                  <span>{skill.label}</span>
+                  <p>{skill.value}</p>
+                </div>
+              ))
+            }
+          </div>
+        </section>
+
+        <section class="resume-section">
+          <div class="resume-rule">
+            <span>Education</span>
+            <span>{resume.education.period}</span>
+          </div>
+          <div class="education-row">
+            <h3>{resume.education.school}</h3>
+            <p>{resume.education.degree}</p>
+          </div>
+        </section>
+      </article>
+    </section>
+  </main>
+</SiteLayout>
+
+<style>
+  .resume-header {
+    width: 100%;
+    max-width: 72rem;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin: 0 auto 2rem;
+  }
+
+  .resume-header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+
+  .resume-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: start;
+    gap: 0.75rem;
+  }
+
+  .resume-actions a {
+    border-radius: 9999px;
+    padding: 0.75rem 1rem;
+    font-family: var(--site-mono);
+    font-size: 11px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition:
+      background 150ms ease,
+      border-color 150ms ease,
+      color 150ms ease;
+  }
+
+  .resume-actions a:first-child {
+    background: var(--accent-blue);
+    color: var(--site-background);
+  }
+
+  .resume-actions a:last-child {
+    border: 1px solid var(--site-border);
+    color: var(--site-muted);
+  }
+
+  .resume-actions a:hover {
+    border-color: var(--accent-blue);
+    background: var(--site-foreground);
+    color: var(--site-background);
+  }
+
+  .resume-stage {
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto 8rem;
+    padding: 1rem;
+    border: 1px solid var(--site-border);
+    background:
+      linear-gradient(135deg, oklch(0.52 0.23 260 / 8%), transparent 34%),
+      linear-gradient(220deg, oklch(0.56 0.14 38 / 5%), transparent 42%),
+      oklch(0.145 0.005 90 / 3%);
+  }
+
+  .resume-sheet {
+    max-width: 54rem;
+    margin: 0 auto;
+    background: #fffefb;
+    border: 1px solid oklch(0.145 0.005 90 / 12%);
+    box-shadow: 0 2rem 5rem oklch(0.145 0.005 90 / 10%);
+    padding: 1.5rem;
+  }
+
+  .resume-top {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    border-bottom: 3px solid var(--site-foreground);
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .resume-top h2 {
+    margin-bottom: 0.75rem;
+    font-size: 2.5rem;
+    font-weight: 800;
+    line-height: 0.95;
+    letter-spacing: 0;
+  }
+
+  .resume-top p {
+    color: var(--accent-blue);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  .resume-top ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    color: oklch(0.145 0.005 90 / 78%);
+    font-size: 0.9rem;
+    line-height: 1.3;
+  }
+
+  .resume-top a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.18em;
+  }
+
+  .resume-section {
+    margin-top: 2rem;
+  }
+
+  .resume-rule {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    border-top: 1px solid var(--site-border);
+    padding-top: 0.75rem;
+    margin-bottom: 1.25rem;
+    color: var(--site-muted);
+    font-family: var(--site-mono);
+    font-size: 10px;
+    line-height: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .experience-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .job-heading {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .job-heading h3,
+  .education-row h3 {
+    margin-bottom: 0.15rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  .job-heading p,
+  .job-heading span,
+  .education-row p {
+    color: var(--site-muted);
+    font-size: 0.9rem;
+    line-height: 1.35;
+  }
+
+  .job-heading span {
+    font-family: var(--site-serif);
+    font-style: italic;
+  }
+
+  .job-heading p a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.16em;
+  }
+
+  .experience-item ul {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    padding-left: 1rem;
+    list-style: disc;
+    color: oklch(0.145 0.005 90 / 86%);
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .skill-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .skill-list span {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--accent-violet);
+    font-family: var(--site-mono);
+    font-size: 10px;
+    line-height: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .skill-list p {
+    color: oklch(0.145 0.005 90 / 82%);
+    font-size: 0.9rem;
+    line-height: 1.5;
+  }
+
+  @media (min-width: 768px) {
+    .resume-header {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: end;
+      margin-bottom: 2rem;
+    }
+
+    .resume-header h1 {
+      font-size: 2.5rem;
+    }
+
+    .resume-stage {
+      padding: 2rem;
+      margin-bottom: 10rem;
+    }
+
+    .resume-sheet {
+      padding: 3rem;
+    }
+
+    .resume-top {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: start;
+    }
+
+    .resume-top h2 {
+      font-size: 3rem;
+    }
+
+    .resume-top ul {
+      text-align: right;
+    }
+
+    .job-heading {
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: baseline;
+    }
+
+    .skill-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

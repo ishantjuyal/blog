@@ -1,0 +1,247 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { getCollection } from "astro:content";
+
+const posts = (await getCollection("posts")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+
+const personalNewsletterUrl = "https://ishant.substack.com/";
+const productNewsletterUrl = "https://pmquestnewsletter.substack.com/";
+
+const newsletters = [
+  {
+    title: "Ishant's Notes",
+    label: "Personal",
+    body: "Letters about life, love, work, and the slow act of becoming myself.",
+    href: personalNewsletterUrl,
+    qr: "/images/substack%20qr%20light.png",
+    cta: "Open newsletter",
+  },
+  {
+    title: "PM Quest Newsletter",
+    label: "Product",
+    body: "Product thinking, PM notes, frameworks, and things I am learning while building.",
+    href: productNewsletterUrl,
+    qr: "/images/qr-code-pmquest.png",
+    cta: "Open newsletter",
+  },
+];
+
+function formatDate(date: Date) {
+  return date.toLocaleDateString("en-US", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+const title = "Writing — Ishant Juyal";
+const description = "Essays, posts, and newsletter links by Ishant Juyal.";
+---
+
+<SiteLayout title={title} description={description}>
+  <main>
+    <header class="page-hero page-hero-compact reveal">
+      <span class="eyebrow">Ishant Juyal — Writing</span>
+      <h1 class="page-title">
+        Essays, notes, and newsletters where I share <em>what I think.</em>
+      </h1>
+    </header>
+
+    <section class="site-section reveal delay-80">
+      <div class="section-rule">
+        <span>Archive</span>
+        <span>{posts.length} posts</span>
+      </div>
+      <div class="writing-list">
+        {
+          posts.map((post) => (
+            <a href={`/writing/${post.slug}`}>
+              <span class="route-meta">{formatDate(post.data.date)}</span>
+              <div>
+                <h2>{post.data.title}</h2>
+                <p>{post.data.description || "A note from the archive."}</p>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="site-section newsletters-section">
+      <div class="section-rule">
+        <span>Newsletters</span>
+        <span><a href={personalNewsletterUrl} target="_blank" rel="noopener noreferrer">Open Substack</a></span>
+      </div>
+      <div class="newsletters-grid">
+        {
+          newsletters.map((newsletter) => (
+            <a
+              class="newsletter-panel"
+              href={newsletter.href}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <div class="newsletter-copy">
+                <span class="route-meta">{newsletter.label}</span>
+                <h2>{newsletter.title}</h2>
+                <p>{newsletter.body}</p>
+                <span class="newsletter-cta">{newsletter.cta}</span>
+              </div>
+              <img src={newsletter.qr} alt={`QR code for ${newsletter.title}`} />
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </main>
+</SiteLayout>
+
+<style>
+  .newsletters-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    border: 1px solid var(--site-border);
+    background: var(--site-border);
+  }
+
+  .newsletter-panel {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    align-items: center;
+    background: var(--site-background);
+    padding: 1.5rem;
+    transition:
+      background 150ms ease,
+      color 150ms ease;
+  }
+
+  .newsletter-panel:hover {
+    background: var(--site-foreground);
+    color: var(--site-background);
+  }
+
+  .newsletter-panel:hover p,
+  .newsletter-panel:hover .route-meta {
+    color: oklch(0.984 0.002 90 / 72%);
+  }
+
+  .newsletter-copy h2 {
+    margin-bottom: 1rem;
+    font-size: 1.875rem;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .newsletter-copy p {
+    max-width: 36rem;
+    color: var(--site-muted);
+    font-size: 0.95rem;
+    line-height: 1.625;
+    text-wrap: pretty;
+  }
+
+  .newsletter-cta {
+    width: fit-content;
+    display: inline-flex;
+    margin-top: 1.5rem;
+    background: var(--site-foreground);
+    color: var(--site-background);
+    padding: 0.8rem 1rem;
+    font-family: var(--site-mono);
+    font-size: 11px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    transition:
+      background 150ms ease,
+      color 150ms ease;
+  }
+
+  .newsletter-panel:hover .newsletter-cta {
+    background: var(--site-background);
+    color: var(--site-foreground);
+  }
+
+  .newsletter-panel img {
+    width: min(100%, 18rem);
+    aspect-ratio: 1;
+    justify-self: start;
+    border: 1px solid var(--site-border);
+    background: #fffefb;
+    padding: 0.75rem;
+  }
+
+  .writing-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1px;
+    border: 1px solid var(--site-border);
+    background: var(--site-border);
+  }
+
+  .writing-list a {
+    display: grid;
+    gap: 2rem;
+    background: var(--site-background);
+    padding: 1.5rem;
+    transition:
+      background 150ms ease,
+      color 150ms ease;
+  }
+
+  .writing-list a:hover {
+    background: var(--site-foreground);
+    color: var(--site-background);
+  }
+
+  .writing-list a:hover p,
+  .writing-list a:hover .route-meta {
+    color: oklch(0.984 0.002 90 / 72%);
+  }
+
+  .writing-list h2 {
+    margin-bottom: 1rem;
+    font-size: 1.875rem;
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+
+  .writing-list p {
+    color: oklch(0.145 0.005 90 / 78%);
+    font-size: 0.95rem;
+    line-height: 1.625;
+    text-wrap: pretty;
+  }
+
+  @media (min-width: 768px) {
+    .newsletters-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .newsletter-panel {
+      min-height: 30rem;
+      padding: 2rem;
+    }
+
+    .newsletter-panel img {
+      width: min(100%, 18rem);
+    }
+
+    .writing-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .writing-list a {
+      min-height: 16rem;
+      padding: 2rem;
+    }
+  }
+</style>

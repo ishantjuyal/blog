@@ -1,0 +1,80 @@
+---
+const year = new Date().getFullYear();
+
+const footerLinks = [
+  {
+    label: "LinkedIn",
+    href: "https://www.linkedin.com/in/ishantjuyal/",
+    external: true,
+  },
+  {
+    label: "GitHub",
+    href: "https://github.com/ishantjuyal/",
+    external: true,
+  },
+  {
+    label: "Twitter / X",
+    href: "https://x.com/juyal_ishant",
+    external: true,
+  },
+  {
+    label: "Resume PDF",
+    href: "/files/Ishant-Juyal-Resume.pdf",
+  },
+];
+---
+
+<footer class="shared-footer">
+  <nav class="shared-footer-links" aria-label="Footer links">
+    {
+      footerLinks.map((link) => (
+        <a
+          href={link.href}
+          target={link.external ? "_blank" : undefined}
+          rel={link.external ? "noreferrer" : undefined}
+        >
+          {link.label}
+        </a>
+      ))
+    }
+  </nav>
+  <p>© {year} Ishant Juyal.</p>
+</footer>
+
+<style>
+  .shared-footer {
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    border-top: 1px solid var(--site-border, var(--portfolio-border, oklch(0.145 0.005 90 / 8%)));
+    padding: 2.5rem 0 3.5rem;
+    color: var(--site-muted, var(--portfolio-muted, oklch(0.52 0.01 90)));
+    font-family: var(--site-mono, var(--portfolio-mono, "JetBrains Mono", Menlo, Consolas, monospace));
+    font-size: 10px;
+    line-height: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  .shared-footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .shared-footer a {
+    color: inherit;
+    text-decoration: none;
+    transition: color 150ms ease;
+  }
+
+  .shared-footer a:hover {
+    color: var(--site-foreground, var(--portfolio-foreground, oklch(0.145 0.005 90)));
+  }
+
+  .shared-footer p {
+    margin: 0;
+    color: oklch(0.52 0.01 90 / 70%);
+  }
+</style>
