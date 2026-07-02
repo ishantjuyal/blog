@@ -6,12 +6,15 @@ const mixpanelAllowedHosts = (
   .split(",")
   .map((host) => host.trim().toLowerCase())
   .filter(Boolean);
+const mixpanelApiHost =
+  import.meta.env.PUBLIC_MIXPANEL_API_HOST || "https://api-eu.mixpanel.com";
 ---
 
-<script define:vars={{ mixpanelToken, mixpanelAllowedHosts }}>
+<script define:vars={{ mixpanelToken, mixpanelAllowedHosts, mixpanelApiHost }}>
   (() => {
     const token = mixpanelToken;
     const allowedHosts = mixpanelAllowedHosts;
+    const apiHost = mixpanelApiHost;
     const hostname = window.location.hostname.toLowerCase();
     const isAllowedSiteHost = (hostToCheck) => {
       const normalizedHost = String(hostToCheck || "").toLowerCase();
@@ -355,6 +358,7 @@ const mixpanelAllowedHosts = (
     loadMixpanelLibrary();
 
     window.mixpanel.init(token, {
+      api_host: apiHost,
       debug: false,
       track_pageview: false,
       persistence: "localStorage",

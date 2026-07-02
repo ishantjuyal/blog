@@ -13,6 +13,7 @@ This project uses Mixpanel for lightweight portfolio and blog analytics. Do not 
 | Consent required | No, per user confirmation on 2026-06-30 |
 | Token location | Hosting/build environment -> `PUBLIC_MIXPANEL_TOKEN` |
 | Allowed host config | `PUBLIC_MIXPANEL_ALLOWED_HOSTS` |
+| API host config | `PUBLIC_MIXPANEL_API_HOST`, defaults to `https://api-eu.mixpanel.com` |
 
 ## Initialization
 
@@ -34,6 +35,8 @@ The tracker only initializes when both conditions are true:
 
 - `PUBLIC_MIXPANEL_TOKEN` is set.
 - `window.location.hostname` matches `PUBLIC_MIXPANEL_ALLOWED_HOSTS`.
+
+The tracker defaults to the EU ingestion endpoint because the current Mixpanel project is EU-region. Events sent to the wrong Mixpanel region are not ingested.
 
 Localhost is intentionally excluded by default so local testing does not send Mixpanel events.
 
