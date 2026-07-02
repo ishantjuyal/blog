@@ -187,14 +187,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
       </nav>
 
       <header class="hero">
-        <h1 class="hero-title reveal delay-80">
+        <div class="hero-status reveal">
+          <a class="status-pill" href="/resume">Open to PM roles</a>
+        </div>
+        <h1 class="hero-title reveal delay-160">
           Product Manager building <span>consumer, growth, &amp; ops</span>{" "}
           product systems.
         </h1>
-        <div class="hero-status reveal delay-160">
-          <a class="status-pill" href="/resume">Open to PM roles</a>
-          <span>Consumer apps · Growth systems · Ops tooling · Analytics</span>
-        </div>
       </header>
 
       <section id="work" class="case-section">
@@ -412,6 +411,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
 
   .portfolio-kicker,
   .nav-links,
+  .hero-kicker,
   .section-rule,
   .case-label,
   .figure-caption,
@@ -450,9 +450,17 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     margin-bottom: 3.5rem;
   }
 
+  .hero-kicker {
+    display: block;
+    margin-bottom: 1rem;
+    color: var(--portfolio-muted);
+    font-size: 0.75rem;
+    line-height: 1rem;
+  }
+
   .hero-title {
     max-width: 100%;
-    margin-bottom: 1.75rem;
+    margin-bottom: 0;
     font-size: 3rem;
     font-weight: 800;
     line-height: 0.92;
@@ -473,6 +481,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     align-items: flex-start;
     justify-content: flex-end;
     gap: 0.75rem;
+    margin-bottom: 1.25rem;
   }
 
   .status-pill {
@@ -899,7 +908,7 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site).toString();
     }
 
     .hero-title {
-      margin-bottom: 2rem;
+      margin-bottom: 0;
       font-size: 4.5rem;
     }
 
