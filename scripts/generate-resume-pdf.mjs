@@ -11,6 +11,7 @@ const projectRoot = path.resolve(__dirname, "..");
 const tempDir = path.join(projectRoot, "tmp", "resume-pdf");
 const bundledDataPath = path.join(tempDir, "resume-data.mjs");
 const jsonDataPath = path.join(tempDir, "resume-data.json");
+const pythonDepsPath = path.join(tempDir, "python-deps");
 const resumeSourcePath = path.join(projectRoot, "src", "data", "resume.ts");
 const rendererPath = path.join(__dirname, "render-resume-pdf.py");
 
@@ -56,10 +57,81 @@ const pythonCandidates = [
 const failures = [];
 let rendered = false;
 
+function pythonEnv(extraPythonPath) {
+  return {
+    ...process.env,
+    PYTHONPATH: [extraPythonPath, process.env.PYTHONPATH].filter(Boolean).join(path.delimiter),
+  };
+}
+
+function hasReportlab(python, env = process.env) {
+  const result = spawnSync(python, ["-c", "import reportlab"], {
+    cwd: projectRoot,
+    encoding: "utf8",
+    env,
+  });
+
+  return result.status === 0;
+}
+
+async function installReportlab(python) {
+  await mkdir(pythonDepsPath, { recursive: true });
+  console.log(`Installing Python PDF dependency for ${python}...`);
+
+  return spawnSync(
+    python,
+    [
+      "-m",
+      "pip",
+      "install",
+      "--disable-pip-version-check",
+      "--quiet",
+      "--target",
+      pythonDepsPath,
+      "reportlab>=4,<5",
+    ],
+    {
+      cwd: projectRoot,
+      encoding: "utf8",
+    },
+  );
+}
+
 for (const python of pythonCandidates) {
+  let env = process.env;
+
+  if (!hasReportlab(python, env)) {
+    const installResult = await installReportlab(python);
+
+    if (installResult.status !== 0) {
+      failures.push({
+        python,
+        status: installResult.status,
+        error: installResult.error?.message,
+        stderr:
+          installResult.stderr ||
+          installResult.stdout ||
+          "Missing reportlab and automatic pip install failed.",
+      });
+      continue;
+    }
+
+    env = pythonEnv(pythonDepsPath);
+
+    if (!hasReportlab(python, env)) {
+      failures.push({
+        python,
+        status: 1,
+        stderr: "Installed reportlab, but Python could not import it from the local build path.",
+      });
+      continue;
+    }
+  }
+
   const result = spawnSync(python, [rendererPath, jsonDataPath, outputPath], {
     cwd: projectRoot,
     encoding: "utf8",
+    env,
   });
 
   if (result.status === 0) {
