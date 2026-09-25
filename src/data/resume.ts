@@ -1,7 +1,6 @@
 export const resume = {
   name: "Ishant Juyal",
   headline: "Product Manager and ex-founder",
-  pdfPath: "/files/Ishant-Juyal-Resume.pdf",
   summary:
     "Product Manager and ex-founder with 5 years of experience building consumer apps, growth systems, analytics foundations, and workflow-heavy products across fintech, consumer commerce, and 0→1 startups.",
   contacts: [

@@ -1,427 +1,71 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import FunWorld from "../components/FunWorld.astro";
 import { getCollection } from "astro:content";
-
-const allPosts = await getCollection("posts");
-const latestPosts = allPosts
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf())
-  .slice(0, 2);
-
-const personalNewsletterUrl = "https://ishant.substack.com/";
-const productNewsletterUrl = "https://pmquestnewsletter.substack.com/";
-
-const socialLinks = [
-  { label: "Email", href: "mailto:ishantnit@gmail.com" },
-  { label: "LinkedIn", href: "https://www.linkedin.com/in/ishantjuyal/" },
-  { label: "GitHub", href: "https://github.com/ishantjuyal/" },
-  { label: "X", href: "https://x.com/juyal_ishant" },
-];
-
-const newsletters = [
-  {
-    title: "Ishant's Notes",
-    label: "Personal",
-    body: "Letters about life, love, work, and the slow act of becoming myself.",
-    href: personalNewsletterUrl,
-    qr: "/images/substack%20qr%20light.png",
-    cta: "Open newsletter",
-  },
-  {
-    title: "PM Quest Newsletter",
-    label: "Product",
-    body: "Product thinking, PM notes, frameworks, and things I am learning while building.",
-    href: productNewsletterUrl,
-    qr: "/images/qr-code-pmquest.png",
-    cta: "Open newsletter",
-  },
-];
-
-const routes = [
-  {
-    href: "/work",
-    meta: "01 / Career",
-    title: "Work",
-    body: "Projects, career notes, and the product work I have done.",
-  },
-  {
-    href: "/lab",
-    meta: "02 / Projects",
-    title: "Lab",
-    body: "Products, side projects, tools, and experiments I have shipped for myself and others.",
-  },
-  {
-    href: "/writing",
-    meta: "03 / Notes",
-    title: "Writing",
-    body: "Essays, blogs and posts about things I think about and I am trying to understand.",
-  },
-  {
-    href: "/resume",
-    meta: "04 / Resume",
-    title: "Resume",
-    body: "A clean version of my roles, work history, skills, education",
-  },
-];
-
-function formatDate(date: Date) {
-  return date.toLocaleDateString("en-US", {
-    day: "numeric",
-    month: "short",
-    year: "numeric",
-  });
-}
-
-const title = "Ishant Juyal";
-const description =
-  "The personal website of Ishant Juyal: work, side projects, writing, and resume.";
+import { projects } from "../data/projects";
+const latestPosts = (await getCollection("posts")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 2);
+const selectedProjects = projects.filter((project) => project.favorite).slice(0, 3);
 ---
-
-<SiteLayout title={title} description={description}>
-  <main>
-    <header class="page-hero reveal">
-      <span class="eyebrow">Personal website</span>
-      <h1 class="page-title">
-        Hi, I am Ishant!
-      </h1>
-      <div class="hero-grid delay-80 reveal">
-        <p class="page-lede">
-          Engineer by education, Product Manager by profession, and a builder at core.
-        </p>
-        <div class="hero-social" aria-label="Social links">
-          <span>Find me on</span>
-          <div>
-            {
-              socialLinks.map((link) => (
-                <a href={link.href} target={link.href.startsWith("mailto:") ? undefined : "_blank"} rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}>
-                  {link.label}
-                </a>
-              ))
-            }
-          </div>
+<SiteLayout title="Ishant Juyal — Product Manager & Builder" description="Ishant Juyal is a product manager at PICKUP Coffee, former co-founder of Crework, and builder of PM Quest, TailorUp, and Appvia. Projects, work, and notes.">
+  <main id="main">
+    <div id="home-content">
+      <header class="home-intro">
+        <h1>Ishant Juyal</h1>
+        <p>I build products and figure things out along the way.</p>
+        <p class="intro-detail">Product at <a href="/work">PICKUP Coffee</a>. Previously co-founded Crework.<br class="desktop-break" /> An engineer by education, an occasional <a href="/notes">writer</a> by habit.</p>
+      </header>
+      <section class="home-section" aria-labelledby="projects-heading">
+        <div class="section-heading">
+          <h2 id="projects-heading" class="section-label">A few things I’ve made</h2>
+          <a href="/projects">All projects <span aria-hidden="true">↗</span></a>
         </div>
-      </div>
-    </header>
-
-    <section class="site-section reveal delay-160">
-      <div class="section-rule">
-        <span>Start here</span>
-        <span>4 rooms</span>
-      </div>
-      <div class="route-grid">
-        {
-          routes.map((route) => (
-            <a class="route-card" href={route.href}>
-              <span class="route-meta">{route.meta}</span>
-              <div>
-                <h2>{route.title}</h2>
-                <p>{route.body}</p>
-              </div>
-              <span class="route-meta">Open {route.title}</span>
-            </a>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="site-section home-writing">
-      <div class="section-rule">
-        <span>Latest writing</span>
-        <span><a href="/writing">All posts</a></span>
-      </div>
-      <div class="editorial-list">
-        {
-          latestPosts.map((post) => (
-            <a href={`/writing/${post.slug}`}>
-              <span class="route-meta">{formatDate(post.data.date)}</span>
-              <div>
-                <h2>{post.data.title}</h2>
-                <p>{post.data.description || "A note from the archive."}</p>
-              </div>
-            </a>
-          ))
-        }
-      </div>
-    </section>
-
-    <section class="site-section newsletters-section">
-      <div class="section-rule">
-        <span>Newsletters</span>
-        <span><a href={personalNewsletterUrl} target="_blank" rel="noopener noreferrer">Open Substack</a></span>
-      </div>
-      <div class="newsletters-grid">
-        {
-          newsletters.map((newsletter) => {
-            const content = (
-              <>
-                <div class="newsletter-copy">
-                  <span class="route-meta">{newsletter.label}</span>
-                  <h2>{newsletter.title}</h2>
-                  <p>{newsletter.body}</p>
-                  <span class="newsletter-cta">{newsletter.cta}</span>
-                </div>
-                {
-                  newsletter.qr ? (
-                    <img src={newsletter.qr} alt={`QR code for ${newsletter.title}`} />
-                  ) : (
-                    <div class="newsletter-placeholder" aria-hidden="true">
-                      <span>QR</span>
-                    </div>
-                  )
-                }
-              </>
-            );
-
-            return newsletter.href ? (
-              <a
-                class="newsletter-panel"
-                href={newsletter.href}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {content}
-              </a>
-            ) : (
-              <article class="newsletter-panel newsletter-panel-pending">
-                {content}
-              </article>
-            );
-          })
-        }
-      </div>
-    </section>
+        <ul class="index-list home-projects">
+          {selectedProjects.map((project) => (
+            <li><a class="index-link project-card" href={`/projects/${project.slug}`} data-project-name={project.name} data-project-code={project.code} data-project-type={project.type}>
+              <span class="project-name">{project.name}</span>
+              <span class="project-description">{project.shortDescription}</span>
+              <span class="arrow" aria-hidden="true">↗</span>
+            </a></li>
+          ))}
+        </ul>
+      </section>
+      <section class="home-section" aria-labelledby="notes-heading">
+        <div class="section-heading">
+          <h2 id="notes-heading" class="section-label">Occasional notes</h2>
+          <a href="/notes">All notes <span aria-hidden="true">↗</span></a>
+        </div>
+        <ul class="index-list notes-list">
+          {latestPosts.map((post) => (
+            <li><a class="index-link" href={`/notes/${post.slug}`}>
+              <span class="item-title">{post.data.title}</span>
+              <time datetime={post.data.date.toISOString()}>{post.data.date.getUTCFullYear()}</time>
+            </a></li>
+          ))}
+        </ul>
+      </section>
+      <p class="home-postscript">There’s a little more <a href="/life">about me</a>, or you can just <a href="mailto:ishantnit@gmail.com">say hello</a>.</p>
+    </div>
+    <FunWorld />
   </main>
 </SiteLayout>
-
 <style>
-  .page-hero {
-    margin-bottom: 4rem;
-  }
-
-  .page-title {
-    margin-bottom: 2rem;
-  }
-
-  .route-card {
-    min-height: 13rem;
-  }
-
-  .hero-social {
-    align-self: end;
-    display: grid;
-    gap: 1rem;
-  }
-
-  .hero-social > span {
-    color: var(--site-muted);
-    font-family: var(--site-mono);
-    font-size: 10px;
-    line-height: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  .hero-social div {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.75rem;
-  }
-
-  .hero-social a {
-    border: 1px solid var(--site-border);
-    background: var(--site-background);
-    padding: 0.65rem 0.85rem;
-    color: var(--site-muted);
-    font-family: var(--site-mono);
-    font-size: 11px;
-    line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition:
-      background 150ms ease,
-      color 150ms ease,
-      border-color 150ms ease;
-  }
-
-  .hero-social a:hover {
-    border-color: var(--site-foreground);
-    background: var(--site-foreground);
-    color: var(--site-background);
-  }
-
-  .newsletters-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1px;
-    border: 1px solid var(--site-border);
-    background: var(--site-border);
-  }
-
-  .newsletter-panel {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    align-items: center;
-    background: var(--site-background);
-    padding: 1.5rem;
-    transition:
-      background 150ms ease,
-      color 150ms ease;
-  }
-
-  .newsletter-panel:hover {
-    background: var(--site-foreground);
-    color: var(--site-background);
-  }
-
-  .newsletter-panel-pending:hover {
-    background: var(--site-background);
-    color: var(--site-foreground);
-  }
-
-  .newsletter-panel:hover p,
-  .newsletter-panel:hover .route-meta {
-    color: oklch(0.984 0.002 90 / 72%);
-  }
-
-  .newsletter-panel-pending:hover p,
-  .newsletter-panel-pending:hover .route-meta {
-    color: var(--site-muted);
-  }
-
-  .newsletter-copy h2 {
-    margin-bottom: 1rem;
-    font-size: 1.875rem;
-    font-weight: 800;
-    line-height: 1.05;
-    letter-spacing: 0;
-    text-wrap: balance;
-  }
-
-  .newsletter-copy p {
-    max-width: 36rem;
-    color: var(--site-muted);
-    font-size: 0.95rem;
-    line-height: 1.625;
-    text-wrap: pretty;
-  }
-
-  .newsletter-cta {
-    width: fit-content;
-    display: inline-flex;
-    margin-top: 1.5rem;
-    background: var(--site-foreground);
-    color: var(--site-background);
-    padding: 0.8rem 1rem;
-    font-family: var(--site-mono);
-    font-size: 11px;
-    line-height: 1;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    transition:
-      background 150ms ease,
-      color 150ms ease;
-  }
-
-  .newsletter-panel:hover .newsletter-cta {
-    background: var(--site-background);
-    color: var(--site-foreground);
-  }
-
-  .newsletter-panel-pending .newsletter-cta {
-    background: var(--site-soft);
-    color: var(--site-muted);
-  }
-
-  .newsletter-panel img,
-  .newsletter-placeholder {
-    width: min(100%, 18rem);
-    aspect-ratio: 1;
-    justify-self: start;
-    border: 1px solid var(--site-border);
-    background: #fffefb;
-    padding: 0.75rem;
-  }
-
-  .newsletter-placeholder {
-    display: grid;
-    place-items: center;
-    background:
-      linear-gradient(135deg, oklch(0.48 0.24 260 / 7%), transparent 46%),
-      var(--site-soft);
-    color: var(--site-muted);
-    font-family: var(--site-mono);
-    font-size: 0.75rem;
-    line-height: 1rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-  }
-
-  .editorial-list {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1px;
-    border: 1px solid var(--site-border);
-    background: var(--site-border);
-  }
-
-  .editorial-list a {
-    display: grid;
-    gap: 2rem;
-    background: var(--site-background);
-    padding: 1.5rem;
-    transition:
-      background 150ms ease,
-      color 150ms ease;
-  }
-
-  .editorial-list a:hover {
-    background: var(--site-foreground);
-    color: var(--site-background);
-  }
-
-  .editorial-list a:hover p,
-  .editorial-list a:hover .route-meta {
-    color: oklch(0.984 0.002 90 / 72%);
-  }
-
-  .editorial-list h2 {
-    font-size: 1.5rem;
-  }
-
-  @media (min-width: 768px) {
-    .page-hero {
-      margin-bottom: 5rem;
-    }
-
-    .page-title {
-      font-size: 4rem;
-    }
-
-    .route-card {
-      min-height: 14rem;
-    }
-
-    .newsletters-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .newsletter-panel {
-      min-height: 30rem;
-      padding: 2rem;
-    }
-
-    .newsletter-panel img,
-    .newsletter-placeholder {
-      width: min(100%, 18rem);
-    }
-
-    .editorial-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .editorial-list a {
-      min-height: 15rem;
-      padding: 2rem;
-    }
+  .home-intro { margin-bottom: 43px; }
+  .home-intro h1 { margin-bottom: 18px; }
+  .home-intro > p { font-size: 15px; }
+  .home-intro .intro-detail { margin-top: 12px; color: var(--site-muted); font-size: 14px; line-height: 1.8; }
+  .home-section { margin-bottom: 34px; }
+  .home-section .section-heading { margin-bottom: 5px; }
+  .home-projects .index-link { display: grid; grid-template-columns: 104px minmax(0, 1fr) 12px; gap: 18px; padding: 12px 0; }
+  .project-name { font-size: 14px; font-weight: 500; }
+  .project-description { color: var(--site-muted); font-size: 13px; }
+  .index-link:hover .project-name { text-decoration: underline; text-underline-offset: 4px; }
+  .notes-list .index-link { padding: 10px 0; font-size: 14px; }
+  .home-postscript { color: var(--site-muted); font-size: 13px; margin-top: 37px; }
+  @media (max-width: 600px) {
+    .desktop-break { display: none; }
+    .home-intro { margin-bottom: 33px; }
+    .home-projects .index-link { grid-template-columns: minmax(0, 1fr) 12px; gap: 0 10px; padding: 12px 0; }
+    .project-description { grid-row: 2; }
+    .home-projects .arrow { grid-column: 2; grid-row: 1; }
   }
 </style>

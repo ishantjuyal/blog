@@ -1,0 +1,112 @@
+---
+import { projects } from "../data/projects";
+const featured = projects.filter((project) => project.favorite).slice(0, 3);
+const stops = [
+  ...featured.map((project, index) => ({ id: project.slug, name: project.name, description: project.description, href: `/projects/${project.slug}`, x: 4 + index * 8, y: 3, icon: index, code: project.code, type: project.type })),
+  { id: "notes", name: "Notes", description: "A small collection of writing, books, and things I’m thinking about.", href: "/notes", x: 4, y: 12, icon: 3 },
+  { id: "work", name: "Work", description: "Product work at PICKUP Coffee, Crework, Houseworks, and Jar.", href: "/work", x: 12, y: 12, icon: 4 },
+  { id: "life", name: "Life", description: "A little about the person behind these projects.", href: "/life", x: 20, y: 12, icon: 5 },
+];
+const icons = [
+  "M6 22V3m0 1h13l-3 5 3 5H6",
+  "m8 4-5 4 3 5 3-2v11h12V11l3 2 3-5-5-4h-4c0 4-6 4-6 0Z",
+  "M3 4h22v15H12l-6 5v-5H3Zm5 5h12M8 14h8",
+  "M14 7C10 3 5 4 2 5v17c5-2 9-1 12 1 3-2 7-3 12-1V5c-4-1-8-2-12 2Zm0 0v16",
+  "M3 8h22v16H3Zm6 0V3h10v5M3 14h22M11 14v3h6v-3",
+  "m2 13 12-10 12 10M6 10v15h16V10M11 25v-9h6v9",
+];
+---
+<section id="fun-world" aria-labelledby="world-title" hidden>
+  <header class="world-header">
+    <div><span class="eyebrow">Same person. A smaller universe.</span><h1 id="world-title">Take a little walk.</h1></div>
+    <span id="world-score" class="world-score" aria-label="Places discovered">0 / 6</span>
+  </header>
+  <p id="world-instructions" class="world-instructions">Find all six places. Use arrow keys or WASD, or tap a place to walk there.</p>
+  <div id="world-board" class="world-board" tabindex="0" role="group" aria-label="Explore Ishant’s world" aria-describedby="world-instructions" data-stops={JSON.stringify(stops)}>
+    <div class="path path-horizontal" aria-hidden="true"></div>
+    {[4, 12, 20].map((x) => <div class="path path-vertical" style={`left: ${x / 24 * 100}%`} aria-hidden="true"></div>)}
+    <span class="map-detail map-detail-one" aria-hidden="true">+</span>
+    <span class="map-detail map-detail-two" aria-hidden="true">+</span>
+    <span class="map-detail map-detail-three" aria-hidden="true">+</span>
+    {stops.map((stop) => (
+      <button class="landmark" type="button" data-stop={stop.id} style={`left: ${stop.x / 24 * 100}%; top: ${stop.y / 16 * 100}%`} aria-label={`Walk to ${stop.name}`}>
+        <span class="landmark-icon"><svg viewBox="0 0 28 28" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="square" stroke-linejoin="miter"><path d={icons[stop.icon]} /></svg><span class="visited-mark" aria-hidden="true">✓</span></span>
+        <span>{stop.name}</span>
+      </button>
+    ))}
+    <div id="world-player" class="world-player" style="left: 50%; top: 50%" aria-hidden="true">
+      <svg viewBox="0 0 16 20" fill="currentColor"><path d="M5 0h6v2h2v7h-2v2H5V9H3V2h2ZM4 12h8v2h2v4h-3v-3h-1v5H6v-5H5v3H2v-4h2Z" /><path d="M5 4h2v2H5zm4 0h2v2H9z" fill="var(--site-background)" /></svg>
+      <span class="player-label">you</span>
+    </div>
+    <span class="map-caption" aria-hidden="true">Ishant’s corner of the internet</span>
+  </div>
+  <div class="world-toolbar">
+    <div class="direction-pad" aria-label="Movement controls">
+      <button type="button" data-direction="left" aria-label="Move left">←</button>
+      <div><button type="button" data-direction="up" aria-label="Move up">↑</button><button type="button" data-direction="down" aria-label="Move down">↓</button></div>
+      <button type="button" data-direction="right" aria-label="Move right">→</button>
+    </div>
+    <p id="world-hint">Six places. No hurry.</p>
+    <button id="world-reset" class="world-reset" type="button">Start over</button>
+  </div>
+  <div id="world-announcement" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  <div id="world-welcome" class="world-panel"><p>Every place is a door to the site.</p><span>Pick a direction. See where it takes you.</span></div>
+  {stops.map((stop) => (
+    <article class="world-panel" data-panel={stop.id} hidden>
+      <div><h2>{stop.name}</h2><p>{stop.description}</p></div>
+      <a href={stop.href} class:list={["world-open", { "project-card": "code" in stop }]} data-project-name={"code" in stop ? stop.name : undefined} data-project-code={"code" in stop ? stop.code : undefined} data-project-type={"type" in stop ? stop.type : undefined}>Explore {stop.name} <span aria-hidden="true">↗</span></a>
+    </article>
+  ))}
+  <p class="world-exit-hint">Press Esc or choose Simple mode to head back.</p>
+</section>
+<script>
+  import "../scripts/fun-world";
+</script>
+<style>
+  .world-header { display: flex; justify-content: space-between; align-items: end; gap: 15px; }
+  .world-header .eyebrow { font-size: 10px; margin-bottom: 9px; }
+  .world-score { font-family: var(--site-mono); font-size: 12px; border: 1px solid var(--site-border); padding: 5px 10px; }
+  .world-instructions { font-size: 12px; color: var(--site-muted); margin: 16px 0 22px; }
+  .world-board { position: relative; height: 340px; border: 1px solid var(--site-border); border-radius: 4px; background-image: radial-gradient(#ddddd5 0.7px, transparent 0.7px); background-size: 16px 16px; isolation: isolate; }
+  .path { position: absolute; pointer-events: none; z-index: -1; }
+  .path-horizontal { top: 50%; left: 16.6667%; width: 66.6667%; border-top: 1px dashed #c7c7bd; }
+  .path-vertical { top: 18.75%; height: 56.25%; border-left: 1px dashed #c7c7bd; }
+  .landmark { position: absolute; transform: translate(-50%, -35%); width: 84px; display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 5px 0; background: var(--site-background); border: 0; font-family: var(--site-mono); font-size: 10px; line-height: 1.4; z-index: 1; }
+  .landmark-icon { position: relative; display: grid; place-items: center; width: 44px; height: 40px; border: 1px solid transparent; }
+  .landmark svg { width: 28px; height: 28px; }
+  .landmark:hover .landmark-icon { border-color: var(--site-border); }
+  .landmark[data-visited="true"] .landmark-icon { color: var(--site-muted); }
+  .visited-mark { display: none; position: absolute; top: -5px; right: -4px; font-size: 11px; }
+  .landmark[data-visited="true"] .visited-mark { display: block; }
+  .landmark[aria-current="location"] > span:last-child { text-decoration: underline; text-underline-offset: 4px; }
+  .world-player { position: absolute; width: 16px; height: 20px; transform: translate(-50%, -50%); z-index: 2; pointer-events: none; transition: left 70ms linear, top 70ms linear; }
+  .world-player svg { display: block; width: 16px; height: 20px; filter: drop-shadow(0 2px 0 var(--site-background)); }
+  .player-label { position: absolute; left: 50%; transform: translateX(-50%); top: 24px; font-family: var(--site-mono); font-size: 9px; background: var(--site-background); padding: 0 3px; }
+  .world-player[data-moved="true"] .player-label { display: none; }
+  .map-detail { position: absolute; color: #b3b3a7; font-family: var(--site-mono); font-size: 16px; }
+  .map-detail-one { left: 32%; top: 32%; }
+  .map-detail-two { right: 31%; bottom: 24%; }
+  .map-detail-three { right: 6%; top: 44%; }
+  .map-caption { position: absolute; bottom: 9px; right: 13px; color: var(--site-muted); font-family: var(--site-mono); font-size: 8px; background: var(--site-background); padding-left: 5px; }
+  .world-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin: 17px 0; }
+  .direction-pad { display: flex; align-items: center; gap: 4px; }
+  .direction-pad > div { display: flex; flex-direction: column; gap: 4px; }
+  .direction-pad button { display: grid; place-items: center; width: 32px; height: 28px; border: 1px solid var(--site-border); border-radius: 3px; background: transparent; font-family: var(--site-mono); font-size: 14px; padding: 0; }
+  .direction-pad button:hover, .direction-pad button:active { background: var(--site-soft); }
+  .world-toolbar p { color: var(--site-muted); font-size: 11px; }
+  .world-reset { border: 0; background: transparent; padding: 8px 0 8px 8px; font-size: 11px; color: var(--site-muted); text-decoration: underline; text-underline-offset: 3px; }
+  .world-panel { min-height: 113px; border-top: 1px solid var(--site-border); padding: 20px 0 0; }
+  .world-panel h2 { font-size: 15px; margin-bottom: 5px; }
+  .world-panel p { font-size: 13px; }
+  .world-panel > span, .world-panel div p { color: var(--site-muted); font-size: 12px; }
+  .world-open { display: inline-block; margin-top: 9px; font-size: 12px; }
+  .world-exit-hint { font-size: 10px; color: var(--site-muted); margin-top: 19px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+  @media (max-width: 600px) {
+    .world-board { height: 290px; }
+    .landmark { width: 65px; font-size: 9px; }
+    .world-toolbar { gap: 10px; }
+    .world-toolbar p { max-width: 140px; text-align: center; }
+    .direction-pad button { width: 36px; height: 34px; }
+  }
+</style>

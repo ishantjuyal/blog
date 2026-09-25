@@ -1,0 +1,35 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { getCollection } from "astro:content";
+const posts = (await getCollection("posts")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+const newsletters = [
+  { title: "Ishant's Notes", label: "Personal", body: "Letters about life, work, and figuring things out.", href: "https://ishant.substack.com/" },
+  { title: "PM Quest Newsletter", label: "Product", body: "Notes on product and what I’m learning while building.", href: "https://pmquestnewsletter.substack.com/" },
+];
+---
+<SiteLayout title="Notes — Ishant Juyal" description="Occasional writing about life, books, and building products.">
+  <main id="main">
+    <header class="page-intro"><h1>Notes</h1><p>Things I’m thinking about. Written when I have something to say.</p></header>
+    <section class="page-section" aria-label="Writing archive">
+      <ul class="index-list notes-list">
+        {posts.map((post) => (
+          <li><a class="index-link" href={`/notes/${post.slug}`}>
+            <div><h2>{post.data.title}</h2><p>{post.data.description}</p></div>
+            <time datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString("en-GB", { month: "short", year: "numeric", timeZone: "UTC" })}</time>
+          </a></li>
+        ))}
+      </ul>
+    </section>
+    <section aria-labelledby="newsletters-heading">
+      <h2 id="newsletters-heading" class="section-label">Also in your inbox</h2>
+      <ul class="index-list">
+        {newsletters.map((newsletter) => (
+          <li><a class="index-link newsletter-panel" href={newsletter.href} target="_blank" rel="noopener noreferrer">
+            <div><span class="route-meta" hidden>{newsletter.label}</span><h2>{newsletter.title}</h2><p>{newsletter.body}</p></div>
+            <span class="arrow" aria-hidden="true">↗</span>
+          </a></li>
+        ))}
+      </ul>
+    </section>
+  </main>
+</SiteLayout>

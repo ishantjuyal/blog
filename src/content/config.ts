@@ -7,6 +7,7 @@ const postsCollection = defineCollection({
     title: z.string(),
     date: z.date(),
     description: z.string().optional(),
+    seoDescription: z.string().optional(),
     featured: z.boolean().default(false),
   }),
 });

@@ -2,5 +2,12 @@
 import { defineConfig } from 'astro/config';
 
 export default defineConfig({
-  site: 'https://ishantjuyal.com', // Replace with your actual site URL
+  site: 'https://www.ishantjuyal.com',
+  redirects: {
+    '/lab': '/projects',
+    '/lab/[slug]': '/projects/[slug]',
+    '/writing': '/notes',
+    '/writing/[...slug]': '/notes/[...slug]',
+    '/resume': '/work',
+  },
 });

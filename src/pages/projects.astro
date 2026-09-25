@@ -1,0 +1,20 @@
+---
+import SiteLayout from "../layouts/SiteLayout.astro";
+import { projects } from "../data/projects";
+---
+<SiteLayout title="Projects — Ishant Juyal" description="Small tools, side projects, and experiments by Ishant Juyal.">
+  <main id="main">
+    <header class="page-intro">
+      <h1>Things I’ve made</h1>
+      <p>Small tools, side projects, and ideas I wanted to try.</p>
+    </header>
+    <ul class="index-list project-grid">
+      {projects.map((project) => (
+        <li><a class="index-link project-card" href={`/projects/${project.slug}`} data-project-name={project.name} data-project-code={project.code} data-project-type={project.type}>
+          <div><h2>{project.name}</h2><p>{project.shortDescription}</p></div>
+          <span class="arrow" aria-hidden="true">↗</span>
+        </a></li>
+      ))}
+    </ul>
+  </main>
+</SiteLayout>

@@ -1,0 +1,12 @@
+---
+const config = {
+  mixpanelToken: import.meta.env.PUBLIC_MIXPANEL_TOKEN || "",
+  gaMeasurementId: import.meta.env.PUBLIC_GA_MEASUREMENT_ID || "G-GPHNTYTXYB",
+  allowedHosts: (import.meta.env.PUBLIC_ANALYTICS_ALLOWED_HOSTS || import.meta.env.PUBLIC_MIXPANEL_ALLOWED_HOSTS || "ishantjuyal.com,www.ishantjuyal.com").split(",").map((host: string) => host.trim().toLowerCase()).filter(Boolean),
+  mixpanelApiHost: import.meta.env.PUBLIC_MIXPANEL_API_HOST || "https://api-eu.mixpanel.com",
+};
+---
+<script id="site-analytics-config" type="application/json" set:html={JSON.stringify(config).replace(/</g, "\\u003c")} />
+<script>
+  import "../scripts/analytics";
+</script>

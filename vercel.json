@@ -1,0 +1,10 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    { "source": "/lab", "destination": "/projects", "permanent": true },
+    { "source": "/lab/:slug", "destination": "/projects/:slug", "permanent": true },
+    { "source": "/writing", "destination": "/notes", "permanent": true },
+    { "source": "/writing/:slug", "destination": "/notes/:slug", "permanent": true },
+    { "source": "/resume", "destination": "/work", "permanent": true }
+  ]
+}

@@ -1,0 +1,34 @@
+---
+import SiteLayout from "../../layouts/SiteLayout.astro";
+import { projects } from "../../data/projects";
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+const { project } = Astro.props;
+const currentIndex = projects.findIndex((item) => item.slug === project.slug);
+const nextProject = projects[(currentIndex + 1) % projects.length];
+---
+<SiteLayout title={`${project.name} — Ishant Juyal`} description={project.description}>
+  <main id="main">
+    <a class="back-link" href="/projects">← All projects</a>
+    <header class="page-intro">
+      <span class="eyebrow">{project.type}</span>
+      <h1>{project.name}</h1>
+      <p>{project.shortDescription}</p>
+    </header>
+    <article class="prose">
+      <h2>What it does</h2>
+      <p>{project.description}</p>
+      <h2>My part</h2>
+      <p>{project.owned}</p>
+      <h2>Built around</h2>
+      <p>{project.tags.join(" · ")}</p>
+      <p class="project-visit"><a class="project-card" href={project.url} target="_blank" rel="noopener noreferrer" data-project-name={project.name} data-project-code={project.code} data-project-type={project.type}>Visit {project.name} <span aria-hidden="true">↗</span></a></p>
+    </article>
+    <div class="next-project"><span class="section-label">Another thing I’ve made</span><a href={`/projects/${nextProject.slug}`}>{nextProject.name} <span aria-hidden="true">→</span></a></div>
+  </main>
+</SiteLayout>
+<style>
+  .project-visit { padding-top: 15px; }
+  .next-project { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; border-top: 1px solid var(--site-border); padding-top: 23px; margin-top: 42px; font-size: 13px; }
+</style>

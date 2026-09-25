@@ -1,6 +1,6 @@
 ---
 // src/layouts/Layout.astro
-import MixpanelTracker from "../components/MixpanelTracker.astro";
+import AnalyticsTracker from "../components/AnalyticsTracker.astro";
 
 export interface Props {
   title: string;
@@ -9,7 +9,6 @@ export interface Props {
 }
 
 const { title, description, canonicalURL } = Astro.props;
-const googleAnalyticsId = 'G-GPHNTYTXYB'; // Replace with your actual GA4 tracking ID
 ---
 
 <html lang="en">
@@ -25,15 +24,7 @@ const googleAnalyticsId = 'G-GPHNTYTXYB'; // Replace with your actual GA4 tracki
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     
-    <!-- Google Analytics -->
-    <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}></script>
-    <script define:vars={{ googleAnalyticsId }}>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', googleAnalyticsId);
-    </script>
-    <MixpanelTracker />
+    <AnalyticsTracker />
     
     <!-- You can add other common head elements here -->
 </head>
@@ -43,9 +34,10 @@ const googleAnalyticsId = 'G-GPHNTYTXYB'; // Replace with your actual GA4 tracki
       <div class="container">
         <a href="/" class="site-title">Ishant Juyal</a>
         <nav class="site-nav">
+          <a href="/life">Life</a>
           <a href="/work">Work</a>
-          <a href="/writing">Writing</a>
-          <a href="/resume">Resume</a>
+          <a href="/notes">Notes</a>
+          <a href="/projects">Projects</a>
         </nav>
       </div>
     </header>
