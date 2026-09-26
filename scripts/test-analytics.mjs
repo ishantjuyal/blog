@@ -110,6 +110,41 @@ for(const method of ['keyboard','controls']) {
   assert.equal(env.mp[0].properties.input_method,method);
   assert.equal(env.mp[0].properties.place_id,'tailorup');
 }
+const gameStops=JSON.parse(documentFrom(home).querySelector('#world-board').dataset.stops);
+for(const stop of gameStops) {
+  env=create(home);vm.runInContext(game,env.context);
+  const board=env.document.querySelector('#world-board');
+  env.document.querySelector('#mode-toggle').click();env.clear();
+  board.dispatch('keydown',{key:'Enter'});
+  assert.equal(env.mp.length,0,'Enter between places must not navigate');
+  let playerX=12,playerY=8;
+  const walkTo=(targetX,targetY)=>{
+    while(playerX!==targetX){const dx=Math.sign(targetX-playerX);board.dispatch('keydown',{key:dx>0?'ArrowRight':'ArrowLeft'});playerX+=dx;}
+    while(playerY!==targetY){const dy=Math.sign(targetY-playerY);board.dispatch('keydown',{key:dy>0?'ArrowDown':'ArrowUp'});playerY+=dy;}
+  };
+  walkTo(stop.x,stop.y-2);env.clear();
+  assert.ok(env.document.querySelector('#world-hint').textContent.includes(`Enter to explore ${stop.name}`));
+  const clicked=[];
+  env.document.addEventListener('click',event=>{if(event.target.tagName==='A')clicked.push(event.target.getAttribute('href'));});
+  board.dispatch('keydown',{key:'Enter'});
+  assert.deepEqual(clicked,[stop.href],`Enter must activate the correct destination: ${stop.name}`);
+  assert.equal(env.mp.length,1);assert.equal(env.ga().length,1);
+  assert.equal(env.mp[0].name,stop.href.startsWith('/projects/')?'project_opened':'navigation_clicked');
+  assert.equal(env.mp[0].properties.destination_path,stop.href);
+  assert.equal(env.mp[0].properties.link_context,'fun_mode');
+  env.clear();
+  board.dispatch('keydown',{key:'Enter',repeat:true});
+  board.dispatch('keydown',{key:'Enter',ctrlKey:true});
+  env.document.querySelector('[data-stop]').dispatch('keydown',{key:'Enter',preventDefault(){assert.fail('preserve native landmark button activation');}});
+  assert.equal(env.mp.length,0,'repeats, shortcuts, and focused buttons must not enter a place');
+  env.document.querySelector('#mode-toggle').click();env.clear();
+  board.dispatch('keydown',{key:'Enter'});assert.equal(env.mp.length,0,'Simple mode must not enter a hidden place');
+  env.document.querySelector('#mode-toggle').click();
+  walkTo(12,8);env.clear();
+  board.dispatch('keydown',{key:'Enter'});
+  assert.equal(env.mp.length,0,'walking away must not enter the last discovered place');
+  assert.deepEqual(clicked,[stop.href],'a place should only open once');
+}
 env=create(home);env.clear();
 for(const callback of env.windowListeners.get('pageshow'))callback({persisted:false});
 assert.equal(env.mp.length,0,'normal pageshow must not duplicate the initial page view');

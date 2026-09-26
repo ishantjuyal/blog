@@ -45,6 +45,7 @@ export class AuditElement {
   querySelector(selector) { return this.querySelectorAll(selector)[0] || null; }
   addEventListener(type, callback) { if (!this.listeners.has(type)) this.listeners.set(type, []); this.listeners.get(type).push(callback); }
   focus() { this.ownerDocument.activeElement = this; }
+  click() { this.dispatch('click'); }
   appendChild(child) { this.children.push(child); this.ownerDocument.inserted.push(child); }
   dispatch(type, extra = {}) {
     const event = { target: this, type, button: 0, preventDefault() {}, ...extra };

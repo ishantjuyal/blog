@@ -21,7 +21,7 @@ const icons = [
     <div><span class="eyebrow">Same person. A smaller universe.</span><h1 id="world-title">Take a little walk.</h1></div>
     <span id="world-score" class="world-score" aria-label="Places discovered">0 / 6</span>
   </header>
-  <p id="world-instructions" class="world-instructions">Find all six places. Use arrow keys or WASD, or tap a place to walk there.</p>
+  <p id="world-instructions" class="world-instructions">Move with arrow keys or WASD. Press Enter at a place to explore. You can also tap a place to walk there.</p>
   <div id="world-board" class="world-board" tabindex="0" role="group" aria-label="Explore Ishant’s world" aria-describedby="world-instructions" data-stops={JSON.stringify(stops)}>
     <div class="path path-horizontal" aria-hidden="true"></div>
     {[4, 12, 20].map((x) => <div class="path path-vertical" style={`left: ${x / 24 * 100}%`} aria-hidden="true"></div>)}

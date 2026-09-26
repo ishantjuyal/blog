@@ -61,6 +61,8 @@ Custom events have the same name in both providers. The only naming difference i
 
 All events carry the base page properties from the first row. `link_context` explains whether an action came from `primary_navigation`, `footer`, `section_header`, `notes_list`, `newsletter_panel`, `project_link`, `next_project`, `fun_mode`, or ordinary `body` content. Project identity still works when a link has no project-card styling.
 
+Keyboard update, 26 September 2026: pressing Enter on the game board while at any of the six places activates its existing Explore link, sending one project or navigation event with `link_context=fun_mode`. Enter away from a place does nothing; held-key repeats do not open it again.
+
 ## Page-by-page coverage
 
 **Common on all 15 pages:** page view; header/home navigation; footer Email → `contact_link_clicked`; LinkedIn/GitHub/X → `social_link_clicked`; Substack profile → `newsletter_opened`. Every row below passed local event dispatch tests. Production receipt is pending for every page.

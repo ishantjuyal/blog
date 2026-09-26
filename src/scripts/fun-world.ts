@@ -48,13 +48,18 @@ if (toggle && world && home && board) {
 
   function stopWalking() { clearTimeout(timer); timer = undefined; }
 
+  function nearbyStop() {
+    return stops.find((stop) => Math.abs(stop.x - x) + Math.abs(stop.y - y) <= 2);
+  }
+
   function render() {
     player.style.left = `${x / 24 * 100}%`;
     player.style.top = `${y / 16 * 100}%`;
     player.dataset.moved = String(x !== 12 || y !== 8 || visited.size > 0);
     score.textContent = `${visited.size} / ${stops.length}`;
     score.setAttribute("aria-label", `${visited.size} of ${stops.length} places discovered`);
-    hint.textContent = visited.size === stops.length ? "You found every corner. Nicely wandered." : "Six places. No hurry.";
+    const nearby = nearbyStop();
+    hint.textContent = nearby ? `Press Enter to explore ${nearby.name}.` : visited.size === stops.length ? "You found every corner. Nicely wandered." : "Six places. No hurry.";
     welcome.hidden = active !== null;
     for (const panel of panels) panel.hidden = panel.dataset.panel !== active;
     for (const landmark of landmarks) {
@@ -68,7 +73,7 @@ if (toggle && world && home && board) {
   }
 
   function discover() {
-    const nearby = stops.find((stop) => Math.abs(stop.x - x) + Math.abs(stop.y - y) <= 2);
+    const nearby = nearbyStop();
     if (!nearby || active === nearby.id) return;
     const isNew = !visited.has(nearby.id);
     active = nearby.id;
@@ -77,7 +82,7 @@ if (toggle && world && home && board) {
       window.siteAnalytics?.track("world_place_discovered", { place_id: nearby.id, places_found: visited.size, input_method: inputMethod });
       if (visited.size === stops.length) window.siteAnalytics?.track("world_completed", { places_found: visited.size });
     }
-    announcement.textContent = `${isNew ? "Discovered" : "Back at"} ${nearby.name}. ${visited.size} of ${stops.length} places found.${visited.size === stops.length ? " You found every corner!" : ""} Explore link below the map.`;
+    announcement.textContent = `${isNew ? "Discovered" : "Back at"} ${nearby.name}. ${visited.size} of ${stops.length} places found.${visited.size === stops.length ? " You found every corner!" : ""} Press Enter to explore, or use the link below the map.`;
   }
 
   function move(direction: Direction) {
@@ -106,7 +111,16 @@ if (toggle && world && home && board) {
   toggle.addEventListener("click", () => setMode(!enabled));
 
   board.addEventListener("keydown", (event) => {
-    if (event.altKey || event.ctrlKey || event.metaKey) return;
+    if (!enabled || event.altKey || event.ctrlKey || event.metaKey) return;
+    if (event.key === "Enter" && event.target === board) {
+      event.preventDefault();
+      if (event.repeat) return;
+      const nearby = nearbyStop();
+      if (!nearby) return;
+      stopWalking();
+      panels.find((panel) => panel.dataset.panel === nearby.id)?.querySelector<HTMLAnchorElement>("a.world-open")?.click();
+      return;
+    }
     const direction = keys[event.key] || keys[event.key.toLowerCase()];
     if (!direction) return;
     event.preventDefault();

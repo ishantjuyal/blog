@@ -42,6 +42,8 @@ Every event includes `page_path`, `page_title`, `page_section`, `hostname`, and 
 
 Career collapse, ordinary game movement, revisits, automatic mode restoration, and skip-to-content anchors do not generate custom events. Game tracking lives in `src/scripts/fun-world.ts`; company labels are on Work's details elements. Classifications are mutually exclusive per link action. Middle-click is supported; right-click is not counted.
 
+On the focused game board, Enter opens the place within discovery range through its existing Explore link. It sends the same single `project_opened` or `navigation_clicked` event with `link_context: fun_mode`; no separate keyboard-entry event. Enter away from a place, in Simple mode, or from key-repeat does not open a place. Focused landmarks retain their native button activation.
+
 ## Routes and SEO
 
 Current routes: `/`, `/projects`, seven `/projects/[slug]` pages, `/notes`, two `/notes/[slug]` pages, `/work`, `/life`. Native Vercel permanent redirects and Astro fallback stubs preserve `/lab`, `/writing`, their existing detail URLs, and `/resume`. Do not restore removed work case studies or other legacy routes without user instruction.
