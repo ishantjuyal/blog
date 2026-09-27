@@ -4,7 +4,7 @@ Audited 25 September 2026. Production domain: https://www.ishantjuyal.com.
 
 ## Current result
 
-The redesigned site has the technical SEO essentials and a shared GA4/Mixpanel event plan. Local verification passes across **14 indexable pages, the 404 page, 227 rendered link instances, four career expanders, and the game interactions**. Twelve legacy URL stubs redirect without sending duplicate analytics.
+The redesigned site has the technical SEO essentials and a shared GA4/Mixpanel event plan. Local verification passes across **14 indexable pages, the 404 page, 226 rendered link instances, four career expanders, and the game interactions**. Twelve legacy URL stubs redirect without sending duplicate analytics. Link coverage was rechecked after the Life timeline update on 27 September 2026.
 
 **This is local verification, not a claim that production reports already contain these events.** Tests execute the actual tracking and game code against built HTML with fake provider clients; they never send traffic. The redesigned homepage also loads in the browser. Deployment and provider-dashboard verification are still pending.
 
@@ -82,7 +82,7 @@ Keyboard update, 26 September 2026: pressing Enter on the game board while at an
 | `/notes/books` | All notes → navigation; article itself does not emit note_opened on arrival |
 | `/notes/how-to-un-fry-my-brain` | All notes → navigation; article itself does not emit note_opened on arrival |
 | `/work` | Four company expanders → `career_details_opened`; projects link → navigation; Get in touch → contact |
-| `/life` | Bookshelf → `note_opened`; Work/Projects/Notes → navigation; personal Substack → newsletter; Say hello → contact |
+| `/life` | Bookshelf → `note_opened`; Work/Projects/Notes → navigation; Say hello → contact; the timeline itself is static text with no new events |
 | Missing URL / 404 | Common events plus recovery links → navigation; page_path records the requested missing URL; page excluded from search indexing |
 
 The 12 static redirect stubs are `/lab`, the seven old project detail URLs under `/lab/`, `/writing`, the two old note URLs under `/writing/`, and `/resume`. They send no events before navigation; the destination page sends its own page view. Vercel's native permanent redirects handle those paths in production.

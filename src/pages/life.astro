@@ -1,16 +1,103 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
 ---
-<SiteLayout title="Life — Ishant Juyal" description="A little about Ishant Juyal, beyond the projects.">
+<SiteLayout title="Life — Ishant Juyal" description="From growing up in Sonipat to finding product, building Crework, and working at PICKUP Coffee. A few turning points in Ishant Juyal’s life.">
   <main id="main">
-    <header class="page-intro"><h1>A little about me</h1></header>
-    <div class="prose">
-      <p>I’m Ishant. I grew up in Sonipat, Haryana, and studied mechanical engineering at NIT Kurukshetra.</p>
-      <p>I found my way into product through analytics, experiments, and curiosity about how people use things. That’s taken me through Jar, Houseworks, co-founding Crework, and now PICKUP Coffee.</p>
-      <p>I like taking an idea and turning it into something people can use. Sometimes that’s part of my <a href="/work">work</a>. Sometimes it becomes a <a href="/projects">small side project</a>.</p>
-      <p>Outside of that, I read and occasionally write. You can browse my <a href="/notes/books">bookshelf</a>, read my <a href="/notes">notes</a>, or find me on <a href="https://ishant.substack.com/" target="_blank" rel="noopener noreferrer">Substack</a>.</p>
-      <p>This is a small place for all of it.</p>
-      <p><a href="mailto:ishantnit@gmail.com">Say hello ↗</a></p>
-    </div>
+    <header class="page-intro life-intro">
+      <h1>A little about me</h1>
+      <p>I grew up in Sonipat. This is a short version of how I found my way into product, communities, and building things.</p>
+    </header>
+
+    <ol class="life-timeline" role="list" aria-label="Life so far">
+      <li>
+        <span class="timeline-date">Growing up</span>
+        <div class="timeline-entry">
+          <h2>Sonipat, then Gurugram</h2>
+          <p>I was born and brought up in Sonipat, Haryana, and later moved to Gurugram.</p>
+        </div>
+      </li>
+      <li>
+        <span class="timeline-date">2017–2021</span>
+        <div class="timeline-entry">
+          <h2>Engineering, maths, and a change of direction</h2>
+          <p>I studied mechanical engineering at NIT Kurukshetra, but it never interested me much. Maths did. Looking for a career that used it led me to machine learning around 2018–19, then deep learning and natural language.</p>
+          <p>I enjoyed the maths, but realised I didn’t want coding to be the centre of my career. I started looking for what else I could do.</p>
+        </div>
+      </li>
+      <li>
+        <span class="timeline-date">In college</span>
+        <div class="timeline-entry">
+          <h2>Trying to build something</h2>
+          <p>I tried starting a mental health venture. Really, it was a college project with first-time mistakes and very little understanding of how a company worked. It fell apart.</p>
+          <p>I also started Crework: a community for people who wanted to learn by building projects and meet others who wanted to do the same.</p>
+        </div>
+      </li>
+      <li>
+        <span class="timeline-date"><time datetime="2021">2021</time></span>
+        <div class="timeline-entry">
+          <h2>Finding product at Jar</h2>
+          <p>My first job was as a product analyst at Jar. It was my first real look at how a startup works: the scale, the decisions, and the product itself. Landing in product analytics turned out to be a lucky route into product management. Crework continued alongside it.</p>
+        </div>
+      </li>
+      <li>
+        <span class="timeline-date">Also in 2021</span>
+        <div class="timeline-entry">
+          <h2>Finding my people online</h2>
+          <p>I started being active on Twitter. Almost all my friends today, and every job opportunity I’ve had, came through people I met there. The connections I made online, including on LinkedIn, also brought people to Crework.</p>
+        </div>
+      </li>
+      <li>
+        <span class="timeline-date">2022–2023</span>
+        <div class="timeline-entry">
+          <h2>Bangalore, and learning together</h2>
+          <p>I moved to Bangalore in 2022. Meeting so many people there changed my life. At Houseworks, I spent about a year and a half as an associate product manager, working on internal tools for cancer care.</p>
+          <p>Alongside work, we turned Crework into free, mentored cohorts. People spent four to six weeks building projects together, then used them to find jobs. Many did. I’m still very proud of that.</p>
+        </div>
+      </li>
+      <li>
+        <span class="timeline-date">2023–2024</span>
+        <div class="timeline-entry">
+          <h2>Going full-time on Crework</h2>
+          <p>I left my job to build Crework Club into a school for product builders. We eventually focused on helping people switch careers into product management. Running a business was something I once couldn’t imagine doing.</p>
+          <p>About a year later, we shut it down. Between a changing AI landscape, competition, gaps in our own skills, and our financial decisions, we couldn’t make it work.</p>
+        </div>
+      </li>
+      <li>
+        <span class="timeline-date">Since 2024</span>
+        <div class="timeline-entry">
+          <h2>Product at PICKUP Coffee</h2>
+          <p>I joined Shuru, a tech and product consultancy, and began working as a product manager with PICKUP Coffee in the Philippines. There’s more about that on my <a href="/work">Work page</a>.</p>
+        </div>
+      </li>
+    </ol>
+
+    <section class="life-now" aria-labelledby="now-heading">
+      <span class="timeline-date">Now</span>
+      <div class="timeline-entry">
+        <h2 id="now-heading">Still learning, still making things</h2>
+        <p>I keep building <a href="/projects">small products</a>, reading, and occasionally writing. AI is changing quickly, and I’m trying to get better at working with it. Honestly, I’m trying to catch up too.</p>
+        <p class="life-links"><a href="/notes/books">My bookshelf</a><span aria-hidden="true">·</span><a href="/notes">Notes</a><span aria-hidden="true">·</span><a href="mailto:ishantnit@gmail.com">Say hello ↗</a></p>
+      </div>
+    </section>
   </main>
 </SiteLayout>
+<style>
+  .life-intro { margin-bottom: 46px; }
+  .life-intro p { max-width: 500px; }
+  .life-timeline { list-style: none; padding: 0; margin: 0; }
+  .life-timeline > li, .life-now { display: grid; grid-template-columns: 100px minmax(0, 1fr); column-gap: 25px; }
+  .life-timeline > li { padding: 27px 0; border-top: 1px solid var(--site-border); }
+  .timeline-date { color: var(--site-muted); font-family: var(--site-mono); font-size: 11px; line-height: 1.7; padding-top: 3px; }
+  .timeline-entry h2 { font-size: 15px; margin-bottom: 9px; }
+  .timeline-entry p { font-size: 14px; line-height: 1.85; }
+  .timeline-entry p + p { margin-top: 12px; }
+  .life-now { border-top: 1px solid var(--site-border); padding-top: 27px; margin-top: 10px; }
+  .timeline-entry .life-links { display: flex; flex-wrap: wrap; gap: 5px 12px; margin-top: 19px; font-size: 12px; }
+  .life-links > span { color: var(--site-muted); }
+  @media (max-width: 520px) {
+    .life-intro { margin-bottom: 32px; }
+    .life-timeline > li, .life-now { grid-template-columns: minmax(0, 1fr); row-gap: 8px; }
+    .life-timeline > li { padding: 24px 0; }
+    .timeline-date { padding-top: 0; }
+  }
+</style>
