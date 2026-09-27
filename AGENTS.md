@@ -31,8 +31,8 @@ Every event includes `page_path`, `page_title`, `page_section`, `hostname`, and 
 | `note_opened` | Click a `/notes/[slug]` link | `post_slug`, link properties |
 | `project_opened` | Click project details, next-project, game project link, or Visit project | `project_name`, `project_slug`, `project_type`, `project_code`, `project_action` (`details`/`visit`), `destination_domain`, link properties |
 | `newsletter_opened` | Click either newsletter or Substack profile | `newsletter_name`, `newsletter_type` (`personal`/`product`/`profile`), `destination_domain`, link properties |
-| `contact_link_clicked` | Email/phone link | `contact_method`, `link_context`; no contact address or link text |
-| `social_link_clicked` | LinkedIn, GitHub, X/Twitter link | `social_platform`, `destination_domain`, link properties |
+| `contact_link_clicked` | Email/phone link | `contact_method`, `link_context`, optional `contact_intent`/`contact_channel`; no contact address, email subject/body, or link text |
+| `social_link_clicked` | LinkedIn, GitHub, X/Twitter link | `social_platform`, `destination_domain`, link properties, optional `contact_intent`/`contact_channel` |
 | `outbound_link_clicked` | Other external link | `destination_domain`, link properties |
 | `career_details_opened` | Expand a company on Work | `company`, `link_context: career_history` |
 | `mode_changed` | Toggle Fun/Simple mode or exit with Escape | `mode`, `input_method` |
@@ -43,6 +43,12 @@ Every event includes `page_path`, `page_title`, `page_section`, `hostname`, and 
 Career collapse, ordinary game movement, revisits, automatic mode restoration, and skip-to-content anchors do not generate custom events. Game tracking lives in `src/scripts/fun-world.ts`; company labels are on Work's details elements. Classifications are mutually exclusive per link action. Middle-click is supported; right-click is not counted.
 
 On the focused game board, Enter opens the place within discovery range through its existing Explore link. It sends the same single `project_opened` or `navigation_clicked` event with `link_context: fun_mode`; no separate keyboard-entry event. Enter away from a place, in Simple mode, or from key-repeat does not open a place. Focused landmarks retain their native button activation.
+
+`src/components/ContactInvitation.astro` offers role contact on Home/Work, questions on Home/Life, and feedback on both note pages. Roles use LinkedIn or email; questions/feedback use LinkedIn, X, or email. The single delegated link handler sends `contact_intent` only for the whitelisted `data-contact-intent` values `role`, `question`, and `feedback`, with `link_context: contact_invitation`. Generic footer links omit intent. No new events or duplicate handlers are needed.
+
+Social CTAs open profile pages, not guaranteed DM composers. Email alternatives open a draft with a subject, optional prompts, and its source page. The site cannot confirm a sent email or DM. Never emit a message-sent, lead, or qualified-recruiter event from these clicks, and never send the email address, draft contents, or message contents to analytics.
+
+Both CTA event types include `contact_channel` (`email`, `linkedin`, or `x`) for a single report dimension across channels. Generic links omit this CTA-specific property along with intent.
 
 ## Routes and SEO
 

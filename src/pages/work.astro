@@ -1,5 +1,6 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import ContactInvitation from "../components/ContactInvitation.astro";
 import { resume } from "../data/resume";
 ---
 <SiteLayout title="Work — Ishant Juyal" description="Product experience across PICKUP Coffee, Crework, Houseworks, and Jar.">
@@ -20,7 +21,8 @@ import { resume } from "../data/resume";
       <h2 class="section-label" id="education-heading">Education</h2>
       <p class="education">{resume.education.school}<br /><span class="muted small">{resume.education.degree} · {resume.education.period}</span></p>
     </section>
-    <p class="small muted">I also make <a href="/projects">small things on the side</a>. <a href="mailto:ishantnit@gmail.com">Get in touch ↗</a></p>
+    <p class="small muted">I also make <a href="/projects">small things on the side</a>.</p>
+    <ContactInvitation kind="role" />
   </main>
 </SiteLayout>
 <style>

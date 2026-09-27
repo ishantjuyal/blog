@@ -42,6 +42,7 @@ export function linkContext(anchor: Element): string {
   if (anchor.closest("#fun-world")) return "fun_mode";
   if (anchor.closest(".site-header, .site-nav, .portfolio-nav, .nav-links")) return "primary_navigation";
   if (anchor.closest("footer")) return "footer";
+  if (anchor.closest(".contact-invitation")) return "contact_invitation";
   if (anchor.closest(".newsletter-panel")) return "newsletter_panel";
   if (anchor.closest(".section-heading, .section-rule")) return "section_header";
   if (anchor.closest(".next-project")) return "next_project";
@@ -50,10 +51,11 @@ export function linkContext(anchor: Element): string {
   return "body";
 }
 
-export function classifyLink(href: string, pageHref: string, text: string, context: string, projectCode?: string): TrackedEvent | null {
+export function classifyLink(href: string, pageHref: string, text: string, context: string, projectCode?: string, contactIntent?: string): TrackedEvent | null {
   if (!href || href.startsWith("#")) return null;
   const event = (name: SiteEvent, properties: Properties): TrackedEvent => ({ name, properties: compact(properties) });
-  if (/^mailto:/i.test(href)) return event("contact_link_clicked", { contact_method: "email", link_context: context });
+  const intent = ["role", "question", "feedback"].includes(contactIntent || "") ? contactIntent : undefined;
+  if (/^mailto:/i.test(href)) return event("contact_link_clicked", { contact_method: "email", link_context: context, contact_intent: intent, contact_channel: intent ? "email" : undefined });
   if (/^tel:/i.test(href)) return event("contact_link_clicked", { contact_method: "phone", link_context: context });
   let url: URL;
   try { url = new URL(href, pageHref); } catch { return null; }
@@ -71,6 +73,6 @@ export function classifyLink(href: string, pageHref: string, text: string, conte
     return event("newsletter_opened", { ...properties, newsletter_name: profile ? "Substack profile" : product ? "PM Quest Newsletter" : "Ishant's Notes", newsletter_type: profile ? "profile" : product ? "product" : "personal", destination_domain: url.hostname });
   }
   const social = domainMatches(url.hostname, "linkedin.com") ? "linkedin" : domainMatches(url.hostname, "github.com") ? "github" : domainMatches(url.hostname, "x.com") || domainMatches(url.hostname, "twitter.com") ? "x" : "";
-  if (social) return event("social_link_clicked", { ...properties, social_platform: social, destination_domain: url.hostname });
+  if (social) return event("social_link_clicked", { ...properties, social_platform: social, destination_domain: url.hostname, contact_intent: intent, contact_channel: intent ? social : undefined });
   return event(internal ? "navigation_clicked" : "outbound_link_clicked", { ...properties, ...(internal ? {} : { destination_domain: url.hostname }) });
 }

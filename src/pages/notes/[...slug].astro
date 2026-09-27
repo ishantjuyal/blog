@@ -1,5 +1,6 @@
 ---
 import SiteLayout from "../../layouts/SiteLayout.astro";
+import ContactInvitation from "../../components/ContactInvitation.astro";
 import { getCollection } from "astro:content";
 export async function getStaticPaths() {
   return (await getCollection("posts")).map((post) => ({ params: { slug: post.slug }, props: { post } }));
@@ -16,5 +17,6 @@ const { Content } = await post.render();
       <time class="article-date" datetime={post.data.date.toISOString()}>{post.data.date.toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })}</time>
     </header>
     <article class="prose"><Content /></article>
+    <ContactInvitation kind="feedback" topic={post.data.title} />
   </main>
 </SiteLayout>

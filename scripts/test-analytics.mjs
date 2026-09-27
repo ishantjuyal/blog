@@ -67,6 +67,25 @@ for(const file of files) {
       const props=env.mp[0].properties;
       assert.ok(!Object.values(props).some(v=>v===null||v===undefined),'empty property');
       if(name==='contact_link_clicked') {assert.ok(!('link_text' in props));assert.ok(!('destination_path' in props));}
+      if(anchor.dataset.contactIntent) {
+        assert.ok(['role','question','feedback'].includes(anchor.dataset.contactIntent));
+        assert.equal(props.contact_intent,anchor.dataset.contactIntent);
+        assert.equal(env.ga()[0].properties.contact_intent,anchor.dataset.contactIntent);
+        const channel=name==='contact_link_clicked'?'email':new URL(anchor.getAttribute('href')).hostname==='x.com'?'x':'linkedin';
+        assert.equal(props.contact_channel,channel);
+        assert.equal(env.ga()[0].properties.contact_channel,channel);
+        assert.equal(props.link_context,'contact_invitation');
+        assert.equal(env.ga()[0].properties.link_context,'contact_invitation');
+        assert.ok(['contact_link_clicked','social_link_clicked'].includes(name));
+        assert.ok(!JSON.stringify(props).includes('ishantnit@gmail.com'),'email address must stay out of analytics');
+        assert.ok(!JSON.stringify(props).includes('Found you here'),'draft body must stay out of analytics');
+        if(name==='contact_link_clicked') {
+          const draft=new URL(anchor.getAttribute('href'));
+          assert.equal(draft.pathname,'ishantnit@gmail.com');
+          assert.ok(draft.searchParams.get('subject')?.includes('via ishantjuyal.com'));
+          assert.ok(draft.searchParams.get('body')?.includes(`Found you here: https://www.ishantjuyal.com${path.replace(/\/$/,'')||'/'}`));
+        }
+      } else assert.ok(!('contact_intent' in props),'generic links must not invent a visitor intent');
       if(name==='project_opened') {assert.ok(props.project_name&&props.project_slug&&props.project_code);assert.equal(props.project_action,anchor.getAttribute('href').startsWith('https:')?'visit':'details');}
       if(anchor.closest('footer'))assert.equal(props.link_context,'footer');
     }
@@ -75,6 +94,16 @@ for(const file of files) {
   rows.push({page:path,events:[...names].sort()});pageCount++;
 }
 const home=await readFile('dist/index.html','utf8');
+for(const [file,intents] of [
+  ['dist/index.html',['role','role','question','question','question']],
+  ['dist/work/index.html',['role','role']],
+  ['dist/life/index.html',['question','question','question']],
+  ['dist/notes/books/index.html',['feedback','feedback','feedback']],
+  ['dist/notes/how-to-un-fry-my-brain/index.html',['feedback','feedback','feedback']],
+]) {
+  const document=documentFrom(await readFile(file,'utf8'));
+  assert.deepEqual(document.querySelectorAll('[data-contact-intent]').map(a=>a.dataset.contactIntent),intents,`contact channels: ${file}`);
+}
 for(const host of ['localhost','127.0.0.1','blog-preview.vercel.app','unexpected.ishantjuyal.com','ishantjuyal.com.evil.test']) {
   const env=create(home,'/?analytics_debug=1',{},host);assert.equal(env.mp.length,0);assert.equal(env.ga().length,0);assert.equal(env.document.inserted.length,0);
 }

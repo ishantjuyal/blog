@@ -1,6 +1,7 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
 import FunWorld from "../components/FunWorld.astro";
+import ContactInvitation from "../components/ContactInvitation.astro";
 import { getCollection } from "astro:content";
 import { projects } from "../data/projects";
 const latestPosts = (await getCollection("posts")).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf()).slice(0, 2);
@@ -43,7 +44,8 @@ const selectedProjects = projects.filter((project) => project.favorite).slice(0,
           ))}
         </ul>
       </section>
-      <p class="home-postscript">There’s a little more <a href="/life">about me</a>, or you can just <a href="mailto:ishantnit@gmail.com">say hello</a>.</p>
+      <p class="home-postscript">There’s a little more <a href="/life">about me</a>.</p>
+      <ContactInvitation />
     </div>
     <FunWorld />
   </main>

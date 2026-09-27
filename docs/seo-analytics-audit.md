@@ -4,7 +4,7 @@ Audited 25 September 2026. Production domain: https://www.ishantjuyal.com.
 
 ## Current result
 
-The redesigned site has the technical SEO essentials and a shared GA4/Mixpanel event plan. Local verification passes across **14 indexable pages, the 404 page, 226 rendered link instances, four career expanders, and the game interactions**. Twelve legacy URL stubs redirect without sending duplicate analytics. Link coverage was rechecked after the Life timeline update on 27 September 2026.
+The redesigned site has the technical SEO essentials and a shared GA4/Mixpanel event plan. Local verification passes across **14 indexable pages, the 404 page, 239 rendered link instances, four career expanders, and the game interactions**. Twelve legacy URL stubs redirect without sending duplicate analytics. Link coverage was rechecked after adding contact invitations and updating Life.
 
 **This is local verification, not a claim that production reports already contain these events.** Tests execute the actual tracking and game code against built HTML with fake provider clients; they never send traffic. The redesigned homepage also loads in the browser. Deployment and provider-dashboard verification are still pending.
 
@@ -50,8 +50,8 @@ Custom events have the same name in both providers. The only naming difference i
 | `project_opened` | Open a project's detail page from home, Projects, the next-project link, or game; also click its external Visit link | `project_name`, `project_slug`, `project_code`, `project_type`, `project_action`, `destination_domain`, link properties | Pass; `project_action=details` and `visit` are distinguished |
 | `note_opened` | Click a particular `/notes/[slug]` article from Home, Notes, or Life | `post_slug`, link properties | Pass; a direct article arrival sends page_view, not a fabricated click |
 | `newsletter_opened` | Click Ishant's Notes, PM Quest Newsletter, or the footer Substack profile | `newsletter_name`, `newsletter_type` (`personal`, `product`, `profile`), `destination_domain`, link properties | Pass; profile and newsletter are distinguished |
-| `contact_link_clicked` | Click an email link; telephone links are supported if added later | `contact_method`, `link_context` | Pass on every current email link; phone covered by a synthetic test |
-| `social_link_clicked` | Click LinkedIn, GitHub, or X | `social_platform`, `destination_domain`, link properties | Pass across all footer links |
+| `contact_link_clicked` | Click an email link; telephone links are supported if added later | `contact_method`, `link_context`, optional `contact_intent=role/question/feedback` and `contact_channel=email/linkedin/x` | Pass on every current email link and contextual draft; phone covered by a synthetic test |
+| `social_link_clicked` | Click LinkedIn, GitHub, or X | `social_platform`, `destination_domain`, link properties, optional `contact_intent=role/question/feedback` and `contact_channel=email/linkedin/x` | Pass across footer links and contact invitations; one event per click |
 | `outbound_link_clicked` | Click an external link not classified as a project, newsletter, or social link | `destination_domain`, `destination_path`, `link_text`, `link_context` | Pass in synthetic cases; no current rendered link needs this fallback |
 | `career_details_opened` | Expand PICKUP Coffee, Crework, Houseworks, or Jar on Work | `company`, `link_context=career_history` | Pass for all four; closing does not fire; reopening counts another open |
 | `mode_changed` | Choose Fun mode, Simple mode, or press Escape while in Fun mode | `mode=fun/simple`, `input_method=button/keyboard` | Pass; restoring a remembered mode does not count as a new interaction |
@@ -59,7 +59,7 @@ Custom events have the same name in both providers. The only naming difference i
 | `world_completed` | Discover the sixth unique place | `places_found=6` | Pass, once per completed walk |
 | `world_restarted` | Click Start over | `places_found` before reset | Pass; begins a fresh walk |
 
-All events carry the base page properties from the first row. `link_context` explains whether an action came from `primary_navigation`, `footer`, `section_header`, `notes_list`, `newsletter_panel`, `project_link`, `next_project`, `fun_mode`, or ordinary `body` content. Project identity still works when a link has no project-card styling.
+All events carry the base page properties from the first row. `link_context` explains whether an action came from `primary_navigation`, `footer`, `contact_invitation`, `section_header`, `notes_list`, `newsletter_panel`, `project_link`, `next_project`, `fun_mode`, or ordinary `body` content. Project identity still works when a link has no project-card styling.
 
 Keyboard update, 26 September 2026: pressing Enter on the game board while at any of the six places activates its existing Explore link, sending one project or navigation event with `link_context=fun_mode`. Enter away from a place does nothing; held-key repeats do not open it again.
 
@@ -69,7 +69,7 @@ Keyboard update, 26 September 2026: pressing Enter on the game board while at an
 
 | Page | Additional actions |
 |---|---|
-| `/` | Three featured project details → `project_opened(details)`; two notes → `note_opened`; body navigation/contact; all four game event types listed above; game Explore links → project or ordinary navigation events |
+| `/` | Three featured project details → `project_opened(details)`; two notes → `note_opened`; role invitation → LinkedIn/email; question invitation → LinkedIn/X/email; all four game event types listed above; game Explore links → project or ordinary navigation events |
 | `/projects` | Seven project links → `project_opened(details)` |
 | `/projects/pm-quest` | Visit PM Quest → `project_opened(visit)`; next TailorUp → `project_opened(details)`; All projects → navigation |
 | `/projects/tailorup` | Visit TailorUp → `project_opened(visit)`; next Appvia → `project_opened(details)`; All projects → navigation |
@@ -79,10 +79,10 @@ Keyboard update, 26 September 2026: pressing Enter on the game board while at an
 | `/projects/year-progress` | Visit Year Progress → `project_opened(visit)`; next Focus Hours → `project_opened(details)`; All projects → navigation |
 | `/projects/focus-hours` | Visit Focus Hours → `project_opened(visit)`; next PM Quest → `project_opened(details)`; All projects → navigation |
 | `/notes` | Two article links → `note_opened`; two newsletter panels → `newsletter_opened(personal/product)` |
-| `/notes/books` | All notes → navigation; article itself does not emit note_opened on arrival |
-| `/notes/how-to-un-fry-my-brain` | All notes → navigation; article itself does not emit note_opened on arrival |
-| `/work` | Four company expanders → `career_details_opened`; projects link → navigation; Get in touch → contact |
-| `/life` | Bookshelf → `note_opened`; Work/Projects/Notes → navigation; Say hello → contact; the timeline itself is static text with no new events |
+| `/notes/books` | All notes → navigation; Share a thought → LinkedIn/X/email with `contact_intent=feedback`; article itself does not emit note_opened on arrival |
+| `/notes/how-to-un-fry-my-brain` | All notes → navigation; Share a thought → LinkedIn/X/email with `contact_intent=feedback`; article itself does not emit note_opened on arrival |
+| `/work` | Four company expanders → `career_details_opened`; projects link → navigation; Discuss a role → LinkedIn/email with `contact_intent=role` |
+| `/life` | Bookshelf → `note_opened`; Work/Projects/Notes → navigation; Ask me a question → LinkedIn/X/email with `contact_intent=question`; the timeline itself is static text with no new events |
 | Missing URL / 404 | Common events plus recovery links → navigation; page_path records the requested missing URL; page excluded from search indexing |
 
 The 12 static redirect stubs are `/lab`, the seven old project detail URLs under `/lab/`, `/writing`, the two old note URLs under `/writing/`, and `/resume`. They send no events before navigation; the destination page sends its own page view. Vercel's native permanent redirects handle those paths in production.
@@ -110,7 +110,31 @@ GA4 can separately produce automatic events such as `session_start`, `first_visi
 | Does the game help discovery? | `mode_changed(fun)` → unique `world_place_discovered` → project details or `world_completed` |
 | Which work experience gets attention? | `career_details_opened` by company |
 
-In GA4, register the custom parameters you want to use as report dimensions—particularly `project_name`, `project_action`, `page_section`, `link_context`, `newsletter_type`, `social_platform`, `mode`, and `company`. This account setup has not been done. Mixpanel can break down the supplied event properties directly. Do not mark every click as a key event: project visits and contact intent are the more useful starting choices.
+In GA4, register the custom parameters you want to use as report dimensions—particularly `project_name`, `project_action`, `page_section`, `link_context`, `contact_intent`, `contact_channel`, `newsletter_type`, `social_platform`, `mode`, and `company`. This account setup has not been done. Mixpanel can break down the supplied event properties directly. Do not mark every click as a key event: project visits and contact intent are the more useful starting choices.
+
+## Contact invitations and meaningful outcomes
+
+The site now offers three reasons to reach out, using the channels Ishant actually reads:
+
+| Intent | Placement | Channels | Meaning |
+|---|---|---|---|
+| `role` | Home and Work | LinkedIn, email | Visitor chose to discuss a role |
+| `question` | Home and Life | LinkedIn, X, email | Visitor chose to ask a question |
+| `feedback` | Both note pages | LinkedIn, X, email | Visitor chose to share a thought about the writing |
+
+These are self-selected intentions, not verified professions or satisfaction scores. A role click does not identify a recruiter; a question click does not identify a junior; a feedback click does not prove the response will be positive. The existing footer keeps generic contact channels, with no invented intent.
+
+Each click produces exactly one existing event: `social_link_clicked` for LinkedIn/X, or `contact_link_clicked` for email. Both carry the intent, source page, and a shared `contact_channel` (`email`, `linkedin`, or `x`), with `link_context=contact_invitation`. Social events add `social_platform`. Email drafts contain the source URL, a distinct subject, and optional prompts for context or what was useful. No email address, subject, draft body, or visitor message goes into analytics. Social links open profiles; they do not guarantee a DM composer or a sent message.
+
+Use three levels of evidence:
+
+1. **Exploration:** Work/project/note page views, career expansion, project visits, and game exploration show activity. They do not prove enjoyment, agreement, or learning.
+2. **Contact intent:** Track unique measured visitors who choose role/question/feedback, split by channel and source page. Combine the two event types with OR when measuring total contact intent; do not require someone to click both email and social. Count each tracked visitor once per reporting period to avoid treating repeated clicks as extra people.
+3. **Actual outcomes:** Count relevant messages received, helpful exchanges, introductions, and interviews separately. The website cannot observe email sending or DMs. A short private monthly tally is sufficient at first; keep message contents out of GA/Mixpanel. When replying, an optional “What brought you to the site, and was anything useful?” question gives direct feedback. Replies can be selective, so they are not a score for every visitor.
+
+Recommended primary measure: **useful conversations originating from the website per month**. Supporting measures: visitors who choose a contact intention, intent by channel, and the pages associated with those choices. Do not interpret raw event counts as messages, or treat a visitor leaving without contacting you as a failure.
+
+In GA4, create event-scoped custom dimensions for `contact_intent` and `contact_channel`; the [official setup guide](https://support.google.com/analytics/answer/14239696?hl=en) explains how to report on these parameters. In Mixpanel, filter the two click events by `link_context=contact_invitation` and break down by intent/channel. Suggested funnels: Work page viewed → role-intent click; Life/note viewed → question/feedback-intent click. Dashboard configuration and production receipt remain pending, rather than being implied by the local tests.
 
 ## Verification details and remaining launch work
 

@@ -1,11 +1,12 @@
 ---
 import SiteLayout from "../layouts/SiteLayout.astro";
+import ContactInvitation from "../components/ContactInvitation.astro";
 ---
 <SiteLayout title="Life — Ishant Juyal" description="From growing up in Sonipat to finding product, building Crework, and working at PICKUP Coffee. A few turning points in Ishant Juyal’s life.">
   <main id="main">
     <header class="page-intro life-intro">
       <h1>A little about me</h1>
-      <p>I grew up in Sonipat. This is a short version of how I found my way into product, communities, and building things.</p>
+      <p>This is a short version of how I found my way into product, communities, and building things.</p>
     </header>
 
     <ol class="life-timeline" role="list" aria-label="Life so far">
@@ -76,9 +77,10 @@ import SiteLayout from "../layouts/SiteLayout.astro";
       <div class="timeline-entry">
         <h2 id="now-heading">Still learning, still making things</h2>
         <p>I keep building <a href="/projects">small products</a>, reading, and occasionally writing. AI is changing quickly, and I’m trying to get better at working with it. Honestly, I’m trying to catch up too.</p>
-        <p class="life-links"><a href="/notes/books">My bookshelf</a><span aria-hidden="true">·</span><a href="/notes">Notes</a><span aria-hidden="true">·</span><a href="mailto:ishantnit@gmail.com">Say hello ↗</a></p>
+        <p class="life-links"><a href="/notes/books">My bookshelf</a><span aria-hidden="true">·</span><a href="/notes">Notes</a></p>
       </div>
     </section>
+    <ContactInvitation kind="question" />
   </main>
 </SiteLayout>
 <style>

@@ -102,7 +102,7 @@ if (element && !window.siteAnalytics) {
     const anchor = (event.target instanceof Element ? event.target : null)?.closest<HTMLAnchorElement>("a[href]");
     if (!anchor || anchor.dataset.analyticsIgnore === "true" || anchor.dataset.mixpanelIgnore === "true") return;
     const project = anchor.closest<HTMLElement>("[data-project-code]");
-    const classified = classifyLink(anchor.getAttribute("href") || "", location.href, anchor.getAttribute("aria-label") || anchor.innerText || anchor.textContent || "", linkContext(anchor), project?.dataset.projectCode);
+    const classified = classifyLink(anchor.getAttribute("href") || "", location.href, anchor.getAttribute("aria-label") || anchor.innerText || anchor.textContent || "", linkContext(anchor), project?.dataset.projectCode, anchor.dataset.contactIntent);
     if (classified) track(classified.name, classified.properties);
   }
   document.addEventListener("click", onLinkClick, true);
